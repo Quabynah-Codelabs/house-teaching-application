@@ -67,6 +67,8 @@
                         android:layout_width="match_parent"
                         android:inputType="textEmailAddress"
                         android:id="@+id/email"
+                        android:drawableStart="@drawable/twotone_mail_outline_24px"
+                        android:drawablePadding="@dimen/padding_normal"
                         android:layout_height="wrap_content" />
 
                 </com.google.android.material.textfield.TextInputLayout>
