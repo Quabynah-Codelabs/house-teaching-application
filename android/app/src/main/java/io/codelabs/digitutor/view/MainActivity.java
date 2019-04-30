@@ -1,6 +1,7 @@
 package io.codelabs.digitutor.view;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,5 +15,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+    }
+
+    public void showLoginDialog(View view) {
+        //todo: show login dialog
     }
 }
