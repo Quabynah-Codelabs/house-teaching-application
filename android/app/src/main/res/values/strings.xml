@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">DigiTutor</string>
+    <string name="home_tutor_name">Home Tutor</string>
+    <string name="home_tutor_desc">A digital platform for finding private tutors</string>
 </resources>
