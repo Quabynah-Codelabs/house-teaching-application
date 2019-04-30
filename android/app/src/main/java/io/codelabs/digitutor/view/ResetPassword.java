@@ -8,17 +8,20 @@ import androidx.annotation.Nullable;
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 
-public class MainActivity extends BaseActivity {
-
+public class ResetPassword extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_reset);
+
 
     }
 
-    public void showLoginDialog(View view) {
-        //todo: show login dialog
+    public void resetUserPassword(View view) {
+        // todo: reset user password here
+    }
+
+    public void navLogin(View view) {
         intentTo(LoginActivity.class, true);
     }
 }

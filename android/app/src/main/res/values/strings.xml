@@ -3,4 +3,13 @@
     <string name="home_tutor_desc">A digital platform for finding private tutors</string>
     <string name="close_drawer">close_drawer</string>
     <string name="open_drawer">open_drawer</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="back_login">Back to login</string>
+    <string name="register">Join Now</string>
+    <string name="request_reset">Send request link</string>
+    <string name="password_reset_desc">Enter your email address below. A link will be sent to you shortly</string>
 </resources>

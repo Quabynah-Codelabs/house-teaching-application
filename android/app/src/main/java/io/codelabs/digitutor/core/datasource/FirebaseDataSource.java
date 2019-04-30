@@ -48,7 +48,7 @@ public final class FirebaseDataSource {
                                 FirebaseUser user = Objects.requireNonNull(task.getResult()).getUser();
                                 if (user != null) {
                                     // Get the current user's path
-                                    firestore.collection(type.equals(BaseUser.Type.PARENT) ? BaseUser.Type.PARENT : BaseUser.Type.TUTOR)
+                                    /*firestore.collection(type.equals(BaseUser.Type.PARENT) ? BaseUser.Type.PARENT : BaseUser.Type.TUTOR)
                                             .document(user.getUid())
                                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
@@ -74,7 +74,9 @@ public final class FirebaseDataSource {
                                     }).addOnFailureListener(e -> {
                                         callback.onError(e.getLocalizedMessage());
                                         callback.onComplete();
-                                    });
+                                    });*/
+                                    callback.onSuccess(null);
+                                    callback.onComplete();
                                 }
                             } else {
                                 callback.onError(task.getException().getLocalizedMessage());

@@ -29,4 +29,10 @@ public class HomeActivity extends BaseActivity {
         //todo: setup header
         //setupHeaderView();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // TODO: 030 30.04.19 Send device token to server
+    }
 }

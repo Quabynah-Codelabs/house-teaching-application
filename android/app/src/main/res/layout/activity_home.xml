@@ -46,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add_light"
                 android:id="@+id/fab"
+                style="@style/HomeTutorAppTheme.FAB"
                 app:layout_anchor="@id/bottom_app_bar" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

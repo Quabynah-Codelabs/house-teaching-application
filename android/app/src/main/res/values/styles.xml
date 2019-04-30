@@ -29,6 +29,32 @@
         <item name="iconPadding">@dimen/padding_normal</item>
     </style>
 
+    <!--Button With Text-->
+    <style name="HomeTutorAppTheme.Button.WithText" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.HomeTutorAppTheme.LargeTitle" parent="TextAppearance.DribbbleShotTitle">
+        <item name="android:textColor">@color/text_primary_dark</item>
+    </style>
+
+    <style name="HomeTutorAppTheme.TextInputTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:colorControlNormal">@color/colorPrimary</item>
+        <item name="android:colorActivatedHighlight">@color/colorPrimary</item>
+        <item name="android:colorControlHighlight">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+    <style name="HomeTutorAppTheme.FAB" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/colorFAB</item>
+        <item name="android:tint">@color/light_icon</item>
+    </style>
+
+    <style name="TextAppearance.HomeTutorAppTheme.SmallTitle" parent="TextAppearance.DribbbleShotDescription">
+        <item name="android:textColor">@color/text_tertiary_dark</item>
+    </style>
+
     <style name="HomeTutorAppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <style name="HomeTutorAppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />

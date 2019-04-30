@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.RegisterActivity"
+        android:focusableInTouchMode="true"
+        android:id="@+id/container">
+
+        <include
+            android:id="@+id/loading"
+            layout="@layout/loading" />
+
+
+        <io.codelabs.widget.ForegroundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <io.codelabs.widget.ForegroundImageView
+                android:layout_width="@dimen/large_avatar_size"
+                android:layout_height="@dimen/large_avatar_size"
+                android:src="@drawable/shr_logo" />
+
+            <io.codelabs.widget.BaselineGridTextView
+                android:layout_width="wrap_content"
+                android:text="@string/home_tutor_name"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:layout_marginTop="@dimen/padding_large"
+                android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.LargeTitle"
+                android:layout_height="wrap_content" />
+
+            <io.codelabs.widget.BaselineGridTextView
+                android:layout_width="wrap_content"
+                android:text="@string/home_tutor_desc"
+                android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
+                android:layout_height="wrap_content" />
+
+            <io.codelabs.widget.ForegroundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:id="@+id/content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/padding_large"
+                    android:hint="@string/username"
+                    style="@style/HomeTutorAppTheme.TextInputTheme"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:inputType="textPersonName|textAutoComplete|textAutoCorrect|textCapWords"
+                        android:id="@+id/username"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/padding_large"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:hint="@string/email_address"
+                    style="@style/HomeTutorAppTheme.TextInputTheme"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:inputType="textEmailAddress"
+                        android:id="@+id/email"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="@dimen/padding_large"
+                    android:layout_marginEnd="@dimen/padding_large"
+                    android:hint="@string/password"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    style="@style/HomeTutorAppTheme.TextInputTheme"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:inputType="textPassword"
+                        android:id="@+id/password"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/HomeTutorAppTheme.Button"
+                    android:id="@+id/login_button"
+                    android:onClick="createUser"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    android:text="@string/register" />
+
+                <io.codelabs.widget.ForegroundLinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/padding_normal"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/HomeTutorAppTheme.Button.WithText"
+                        android:id="@+id/forgot_password"
+                        android:layout_marginEnd="@dimen/spacing_normal"
+                        android:text="@string/back_login"
+                        android:onClick="navLogin"
+                        android:layout_gravity="start" />
+
+                </io.codelabs.widget.ForegroundLinearLayout>
+
+            </io.codelabs.widget.ForegroundLinearLayout>
+
+
+        </io.codelabs.widget.ForegroundLinearLayout>
+
+    </FrameLayout>
+</layout>
