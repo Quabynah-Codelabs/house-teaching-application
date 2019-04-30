@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import io.codelabs.digitutor.R;
+import io.codelabs.digitutor.core.base.BaseActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -19,5 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void showLoginDialog(View view) {
         //todo: show login dialog
+        intentTo(HomeActivity.class, true);
     }
 }
