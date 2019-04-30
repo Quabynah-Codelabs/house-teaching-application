@@ -2,19 +2,17 @@ package io.codelabs.digitutor.view;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.transition.TransitionManager;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.Objects;
 
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
-import io.codelabs.digitutor.core.datasource.FirebaseDataSource;
-import io.codelabs.digitutor.core.datasource.LoginCredentials;
+import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
+import io.codelabs.digitutor.core.datasource.remote.LoginCredentials;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.databinding.ActivityLoginBinding;
@@ -23,6 +21,7 @@ import io.codelabs.sdk.util.ExtensionUtils;
 public class LoginActivity extends BaseActivity {
     private ActivityLoginBinding binding;
     public static final String EXTRA_USER_TYPE = "EXTRA_USER_TYPE";
+    private String type;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,10 +30,15 @@ public class LoginActivity extends BaseActivity {
 
         // Hide Loading view
         binding.loading.setVisibility(View.GONE);
+
+        // Get the user type from the intent bundle
+        type = getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT;
     }
 
     public void createNewAccount(View view) {
-        intentTo(RegisterActivity.class, true);
+        Bundle bundle = new Bundle();
+        bundle.putString(RegisterActivity.EXTRA_USER_TYPE, type);
+        intentTo(RegisterActivity.class,bundle, true);
     }
 
     public void resetPassword(View view) {
@@ -42,11 +46,11 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void loginUser(View view) {
-        String email = ((EditText) findViewById(R.id.email)).getText().toString();
-        String password = ((EditText) findViewById(R.id.password)).getText().toString();
+        String email = Objects.requireNonNull(binding.email.getText()).toString();
+        String password = Objects.requireNonNull(binding.password.getText()).toString();
 
-        FirebaseDataSource.login(this, FirebaseAuth.getInstance(), FirebaseFirestore.getInstance(),
-                new LoginCredentials(email, password), BaseUser.Type.PARENT, new AsyncCallback<Void>() {
+        FirebaseDataSource.login(this, auth,
+                new LoginCredentials(email, password), new AsyncCallback<Void>() {
                     @Override
                     public void onError(@Nullable String error) {
                         ExtensionUtils.toast(LoginActivity.this, error, true);
@@ -54,7 +58,12 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(@Nullable Void response) {
-                        ExtensionUtils.toast(LoginActivity.this, "Logged in successfully", true);
+                        ExtensionUtils.showConfirmationToast(LoginActivity.this, null,
+                                auth.getCurrentUser().getEmail() != null ? auth.getCurrentUser().getEmail() : auth.getCurrentUser().getUid(),
+                                "Logged in as...");
+
+                        // Store user data locally
+                        prefs.login(auth.getUid(), type);
                         intentTo(HomeActivity.class, true);
                     }
 

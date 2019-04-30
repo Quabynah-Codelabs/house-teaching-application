@@ -67,6 +67,7 @@
                         android:layout_height="wrap_content"
                         style="@style/HomeTutorAppTheme.FAB"
                         app:fabSize="mini"
+                        android:id="@+id/fab"
                         app:layout_constraintBottom_toBottomOf="@id/profile"
                         app:layout_constraintEnd_toEndOf="@id/profile"
                         android:src="@drawable/twotone_add_photo_alternate_24px" />

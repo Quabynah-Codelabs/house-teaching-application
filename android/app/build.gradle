@@ -54,6 +54,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.2.1'
     // Database
     implementation 'com.google.firebase:firebase-firestore:18.2.0'
+    // Storage
+    implementation 'com.google.firebase:firebase-storage:16.1.0'
 
     // Codelabs
     implementation 'com.github.Quabynah-Codelabs.quabynah-codelabs-sdk:sdk-library:v1.3.5.2'

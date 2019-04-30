@@ -1,4 +1,4 @@
-package io.codelabs.digitutor.core.datasource;
+package io.codelabs.digitutor.core.datasource.remote;
 
 import android.util.Patterns;
 
