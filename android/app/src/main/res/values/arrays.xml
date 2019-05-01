@@ -3,6 +3,6 @@
     <string-array name="login_options">
         <item>Parent</item>
         <item>Tutor</item>
-        <item>Ward</item>
+<!--        <item>Ward</item>-->
     </string-array>
 </resources>

@@ -157,7 +157,8 @@ public class RegisterActivity extends BaseActivity {
             });
         } else {
             FirebaseDataSource.createUser(this, auth, firestore, new LoginCredentials(email, password),
-                    getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT, username, new AsyncCallback<Void>() {
+                    getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT, username,
+                    new AsyncCallback<Void>() {
                         @Override
                         public void onError(@Nullable String error) {
                             ExtensionUtils.toast(RegisterActivity.this, error, true);
