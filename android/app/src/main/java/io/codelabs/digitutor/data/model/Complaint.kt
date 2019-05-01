@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class Complaint(
-        override val key: String,
+        override var key: String,
         val parent: String,
         val tutor: String,
         var description: String,

@@ -34,6 +34,7 @@
         </activity>
         <activity
             android:name=".view.HomeActivity"
+            android:theme="@style/HomeTutorAppTheme.Home"
             android:configChanges="orientation|screenLayout|screenSize" />
         <activity
             android:name=".view.LoginActivity"

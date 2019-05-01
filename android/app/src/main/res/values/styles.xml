@@ -14,6 +14,12 @@
     <style name="HomeTutorAppTheme.Light">
         <item name="android:statusBarColor">@color/app_scrim</item>
         <item name="android:navigationBarColor">@color/app_scrim</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+
+    <style name="HomeTutorAppTheme.Home">
+        <item name="android:statusBarColor">@color/app_scrim</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 

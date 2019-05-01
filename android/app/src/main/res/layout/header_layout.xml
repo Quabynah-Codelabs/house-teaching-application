@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/background_light"
-    android:padding="@dimen/padding_large"
-    android:maxHeight="@dimen/nav_header_height">
+    android:paddingEnd="@dimen/padding_large"
+    android:paddingStart="@dimen/padding_large"
+    android:paddingTop="@dimen/padding_large">
 
     <!--Profile Avatar-->
     <io.codelabs.widget.CircularImageView

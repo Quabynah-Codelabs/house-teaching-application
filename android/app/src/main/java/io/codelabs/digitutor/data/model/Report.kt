@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class Report(
-        override val key: String,
+        override var key: String,
         val tutor: String,
         val subject: String,
         val ward: String,

@@ -6,27 +6,27 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 // Store user information in the database
-exports.alertNewUser = functions.auth.user().onCreate((record, context) => {
-    // get the database instance
-    let db = admin.firestore();
+// exports.alertNewUser = functions.auth.user().onCreate((record, context) => {
+//     // get the database instance
+//     let db = admin.firestore();
 
-    // Get default profile image
-    var defaultAvatar = 'https://firebasestorage.googleapis.com/v0/b/house-teaching.appspot.com/o/default-avatar.png?alt=media&token=b1ab3898-f830-42b6-aa08-18c70627bb87';
+//     // Get default profile image
+//     var defaultAvatar = 'https://firebasestorage.googleapis.com/v0/b/house-teaching.appspot.com/o/default-avatar.png?alt=media&token=b1ab3898-f830-42b6-aa08-18c70627bb87';
 
-    // get the database path for users & we store the user's information there
-    return db.collection('users').doc(record.uid).set({
-        name: record.displayName ? record.displayName : 'No username',
-        email: record.email ? record.email : 'No email',
-        phone: record.phoneNumber ? record.phoneNumber : 'No phone number',
-        uid: record.uid,
-        token: null,
-        avatar: record.photoURL ? record.photoURL.toString() : defaultAvatar
-    }).then(() => {
-        return console.log(`User created as: ${record.email} & UID: ${record.uid}`);
-    }).catch(err => {
-        return console.log(`Could not create user document. ${err.message}`);
-    })
-});
+//     // get the database path for users & we store the user's information there
+//     return db.collection('users').doc(record.uid).set({
+//         name: record.displayName ? record.displayName : 'No username',
+//         email: record.email ? record.email : 'No email',
+//         phone: record.phoneNumber ? record.phoneNumber : 'No phone number',
+//         uid: record.uid,
+//         token: null,
+//         avatar: record.photoURL ? record.photoURL.toString() : defaultAvatar
+//     }).then(() => {
+//         return console.log(`User created as: ${record.email} & UID: ${record.uid}`);
+//     }).catch(err => {
+//         return console.log(`Could not create user document. ${err.message}`);
+//     })
+// });
 
 // Send notification to the user's device
 exports.sendNotification = functions.firestore.document('users/{uid}').onUpdate((change, context) => {

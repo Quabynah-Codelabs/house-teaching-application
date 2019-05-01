@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 data class Parent(override var email: String?,
                   override var name: String?,
                   override var avatar: String?,
-                  override val key: String,
+                  override var key: String,
                   override var token: String?,
                   var wards: MutableList<String> = mutableListOf(),
                   override var type: String = BaseUser.Type.PARENT) : BaseUser {

@@ -9,7 +9,7 @@ import java.util.*
  */
 @Parcelize
 data class Schedule(
-        override val key: String,
+        override var key: String,
         val tutor: String,
         val subject: String,
         val ward: String,

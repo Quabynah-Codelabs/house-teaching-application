@@ -6,5 +6,5 @@ import android.os.Parcelable
  * Base model class for all data models in the application
  */
 interface BaseDataModel : Parcelable {
-    val key: String
+    var key: String
 }

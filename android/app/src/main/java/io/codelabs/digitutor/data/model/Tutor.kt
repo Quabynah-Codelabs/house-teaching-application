@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 data class Tutor(override var email: String?,
                  override var name: String?,
                  override var avatar: String?,
-                 override val key: String,
+                 override var key: String,
                  override var token: String?,
                  var blocked: Boolean = false,
                  var rating: Double = 1.0,

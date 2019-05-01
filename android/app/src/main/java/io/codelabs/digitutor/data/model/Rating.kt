@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class Rating(
-        override val key: String,
+        override var key: String,
         val parent: String,
         val tutor: String,
         val subject: String,

@@ -9,8 +9,8 @@ android {
         applicationId "io.codelabs.digitutor"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode gitCommitCount
-        versionName gitSha
+        versionCode /*gitCommitCount*/ 1
+        versionName /*gitSha*/ "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

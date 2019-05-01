@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class Subject(
-        override val key: String,
+        override var key: String,
         val name: String,
         val description: String
 ) : BaseDataModel {

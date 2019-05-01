@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
 data class Ward(override var email: String?,
                 override var name: String?,
                 override var avatar: String?,
-                override val key: String,
+                override var key: String,
                 override var token: String?,
                 override var type: String = BaseUser.Type.WARD) : BaseUser {
     constructor() : this("", "", "", "", FirebaseInstanceId.getInstance().token)

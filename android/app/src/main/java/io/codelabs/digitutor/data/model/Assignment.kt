@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Assignment(
-        override val key: String,
+        override var key: String,
         val ward: String,
         val subject: String,
         val dateGiven: Long,

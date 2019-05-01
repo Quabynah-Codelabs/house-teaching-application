@@ -13,7 +13,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -23,6 +26,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
+import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
@@ -166,6 +172,7 @@ public final class FirebaseDataSource {
                                 BaseUser model = type.equals(BaseUser.Type.PARENT) ? new Parent() : new Tutor();
                                 model.setName(username);
                                 model.setEmail(credentials.getEmail());
+                                model.setKey(Objects.requireNonNull(task.getResult()).getUser().getUid());
                                 model.setType(model instanceof Parent ? BaseUser.Type.PARENT : BaseUser.Type.TUTOR);
 
                                 // Store user information in  the database
@@ -193,6 +200,34 @@ public final class FirebaseDataSource {
             });
         } else {
             callback.onError("Invalid login credentials. Please check your email, username and password");
+            callback.onComplete();
+        }
+    }
+
+    public static void getCurrentUser(Activity host, FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @NotNull AsyncCallback<BaseUser> callback) {
+        callback.onStart();
+        if (prefs.isLoggedIn()) {
+            String collection = prefs.getType().equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS;
+            firestore.collection(collection).document(prefs.getKey()).addSnapshotListener(host, (documentSnapshot, e) -> {
+                if (e != null) {
+                    callback.onError(e.getLocalizedMessage());
+                    callback.onComplete();
+                    return;
+                }
+
+                BaseUser user;
+                if (prefs.getType().equals(BaseUser.Type.PARENT))
+                    user = documentSnapshot.toObject(Parent.class);
+                else {
+                    user = documentSnapshot.toObject(Tutor.class);
+                }
+
+                // Send live data to the callback
+                callback.onSuccess(user);
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("Please sign in first");
             callback.onComplete();
         }
     }

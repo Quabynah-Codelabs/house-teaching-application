@@ -9,7 +9,7 @@ import java.util.*
  */
 @Parcelize
 data class Timetable(
-        override val key: String,
+        override var key: String,
         val ward: String,
         val tutor: String,
         val subject: String,

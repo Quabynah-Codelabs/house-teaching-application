@@ -64,6 +64,7 @@ public class LoginActivity extends BaseActivity {
 
                         // Store user data locally
                         prefs.login(auth.getUid(), type);
+
                         intentTo(HomeActivity.class, true);
                     }
 
