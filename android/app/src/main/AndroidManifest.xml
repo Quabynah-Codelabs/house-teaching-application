@@ -60,6 +60,9 @@
         <activity
             android:name=".view.AssignmentActivity"
             android:configChanges="orientation|screenLayout|screenSize" />
+        <activity
+            android:name=".view.AddSubjectActivity"
+            android:configChanges="orientation|screenLayout|screenSize" />
     </application>
 
 </manifest>

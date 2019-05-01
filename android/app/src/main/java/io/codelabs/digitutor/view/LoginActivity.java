@@ -14,6 +14,7 @@ import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.datasource.remote.LoginCredentials;
 import io.codelabs.digitutor.core.util.AsyncCallback;
+import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.databinding.ActivityLoginBinding;
 import io.codelabs.sdk.util.ExtensionUtils;
@@ -58,7 +59,7 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(@Nullable Void response) {
-                        ExtensionUtils.showConfirmationToast(LoginActivity.this, null,
+                        ExtensionUtils.showConfirmationToast(LoginActivity.this, Constants.DEFAULT_AVATAR_URL,
                                 auth.getCurrentUser().getEmail() != null ? auth.getCurrentUser().getEmail() : auth.getCurrentUser().getUid(),
                                 "Logged in as...");
 

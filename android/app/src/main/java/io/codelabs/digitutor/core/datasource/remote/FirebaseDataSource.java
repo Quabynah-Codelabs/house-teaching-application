@@ -13,10 +13,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -26,14 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-
 import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.data.model.Parent;
 import io.codelabs.digitutor.data.model.Tutor;
+import io.codelabs.sdk.util.ExtensionUtils;
 
 /**
  * Firebase data source class
@@ -207,6 +203,7 @@ public final class FirebaseDataSource {
     public static void getCurrentUser(Activity host, FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @NotNull AsyncCallback<BaseUser> callback) {
         callback.onStart();
         if (prefs.isLoggedIn()) {
+            ExtensionUtils.debugLog(host, prefs.getType());
             String collection = prefs.getType().equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS;
             firestore.collection(collection).document(prefs.getKey()).addSnapshotListener(host, (documentSnapshot, e) -> {
                 if (e != null) {

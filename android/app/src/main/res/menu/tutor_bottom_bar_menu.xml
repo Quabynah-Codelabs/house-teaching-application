@@ -19,4 +19,10 @@
         app:showAsAction="never"
         android:icon="@drawable/twotone_work_outline_24px" />
 
+    <item
+        android:id="@+id/menu_subjects"
+        android:title="Add subject"
+        app:showAsAction="never"
+        android:icon="@drawable/twotone_code_24px" />
+
 </menu>

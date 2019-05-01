@@ -25,7 +25,6 @@ import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
-import io.codelabs.digitutor.data.model.Assignment;
 import io.codelabs.digitutor.databinding.ActivityHomeBinding;
 import io.codelabs.digitutor.view.fragment.ClientsFragment;
 import io.codelabs.digitutor.view.fragment.FeedbackFragment;
@@ -158,7 +157,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.menu_view_timetable:
                 addFragment(new TimeTableFragment());
                 break;
-
+            case R.id.menu_subjects:
+                intentTo(AddSubjectActivity.class);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
