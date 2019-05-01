@@ -14,7 +14,7 @@
         android:icon="@drawable/twotone_calendar_today_24px" />
 
     <item
-        android:id="@+id/menu_request"
+        android:id="@+id/menu_tutor_requests"
         android:title="Job Requests"
         app:showAsAction="never"
         android:icon="@drawable/twotone_work_outline_24px" />

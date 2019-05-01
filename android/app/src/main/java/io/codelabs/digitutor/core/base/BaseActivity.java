@@ -6,12 +6,14 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 
 /**
@@ -32,9 +34,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * navigate to other activities
+     * Navigate to other activities
      *
-     * @param target
+     * @param target Activity to navigate to
      */
     public void intentTo(Class<? extends Activity> target) {
         startActivity(new Intent(getApplicationContext(), target));
@@ -50,5 +52,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivity(intent);
         if (finish) finishAfterTransition();
+    }
+
+    /**
+     * Fragment Helper
+     */
+    public void addFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame, fragment, fragment.getClass().getName()).commitNow();
     }
 }

@@ -24,6 +24,12 @@ import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.databinding.ActivityHomeBinding;
+import io.codelabs.digitutor.view.fragment.ClientsFragment;
+import io.codelabs.digitutor.view.fragment.FeedbackFragment;
+import io.codelabs.digitutor.view.fragment.RequestsFragment;
+import io.codelabs.digitutor.view.fragment.SchedulesFragment;
+import io.codelabs.digitutor.view.fragment.TimeTableFragment;
+import io.codelabs.digitutor.view.fragment.TutorsFragment;
 import io.codelabs.sdk.glide.GlideApp;
 import io.codelabs.sdk.util.ExtensionUtils;
 import io.codelabs.widget.CircularImageView;
@@ -53,11 +59,13 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
         // Set FAB icon & click action
         if (BaseUser.Type.PARENT.equals(prefs.getType())) {
+            addFragment(new TutorsFragment());
             binding.fab.setImageDrawable(getResources().getDrawable(R.drawable.twotone_supervisor_account_24px));
             binding.fab.setOnClickListener(v -> {
                 // TODO: 001 01.05.19 Add new ward
             });
         } else {
+            addFragment(new ClientsFragment());
             binding.fab.setImageDrawable(getResources().getDrawable(R.drawable.twotone_assignment_24px));
             binding.fab.setOnClickListener(v -> {
                 // TODO: 001 01.05.19 Add new ward
@@ -100,7 +108,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                         .into(avatar);
 
                 username.setText(response.getName());
-                type.setText(String.format("Logged in as: %s", response.getType().toLowerCase()));
+                type.setText(/*String.format("Logged in as: %s", response.getType().toLowerCase())*/ response.getEmail());
 
                 ExtensionUtils.debugLog(HomeActivity.this, response);
             }
@@ -136,8 +144,24 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
-                // TODO: 001 01.05.19 Show Search screen
+                intentTo(SearchActivity.class);
                 break;
+            case R.id.menu_request_tutor:
+                intentTo(RequestTutorActivity.class);
+                break;
+            case R.id.menu_tutor_requests:
+                addFragment(new RequestsFragment());
+                break;
+            case R.id.menu_tutor_feedback:
+                addFragment(new FeedbackFragment());
+                break;
+            case R.id.menu_view_schedule:
+                addFragment(new SchedulesFragment());
+                break;
+            case R.id.menu_view_timetable:
+                addFragment(new TimeTableFragment());
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -148,11 +172,12 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.menu_logout:
                 // TODO: 001 01.05.19 logout user here
                 break;
-            case R.id.menu_tutor_feedback:
-                // TODO: 001 01.05.19 Show Tutor feedback fragment
-                break;
-            case R.id.menu_view_timetable:
-                // TODO: 001 01.05.19 Show Timetable fragment
+            case R.id.menu_home:
+                if (BaseUser.Type.PARENT.equals(prefs.getType())) {
+                    addFragment(new TutorsFragment());
+                } else {
+                    addFragment(new ClientsFragment());
+                }
                 break;
         }
 
