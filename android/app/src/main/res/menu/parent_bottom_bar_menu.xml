@@ -25,10 +25,4 @@
         app:showAsAction="never"
         android:icon="@drawable/twotone_calendar_today_24px" />
 
-    <item
-        android:id="@+id/menu_request_tutor"
-        android:title="Request Tutor"
-        app:showAsAction="never"
-        android:icon="@drawable/twotone_how_to_reg_24px" />
-
 </menu>

@@ -50,11 +50,15 @@
             android:configChanges="orientation|screenLayout|screenSize" />
         <activity
             android:name=".view.SearchActivity"
-            android:theme="@style/HomeTutorAppTheme.Light"
             android:configChanges="orientation|screenLayout|screenSize" />
         <activity
             android:name=".view.RequestTutorActivity"
-            android:theme="@style/HomeTutorAppTheme.Light"
+            android:configChanges="orientation|screenLayout|screenSize" />
+        <activity
+            android:name=".view.AddWardActivity"
+            android:configChanges="orientation|screenLayout|screenSize" />
+        <activity
+            android:name=".view.AssignmentActivity"
             android:configChanges="orientation|screenLayout|screenSize" />
     </application>
 

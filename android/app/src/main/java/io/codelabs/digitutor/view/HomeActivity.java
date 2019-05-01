@@ -2,6 +2,7 @@ package io.codelabs.digitutor.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
@@ -23,6 +25,7 @@ import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
+import io.codelabs.digitutor.data.model.Assignment;
 import io.codelabs.digitutor.databinding.ActivityHomeBinding;
 import io.codelabs.digitutor.view.fragment.ClientsFragment;
 import io.codelabs.digitutor.view.fragment.FeedbackFragment;
@@ -61,14 +64,12 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         if (BaseUser.Type.PARENT.equals(prefs.getType())) {
             addFragment(new TutorsFragment());
             binding.fab.setImageDrawable(getResources().getDrawable(R.drawable.twotone_supervisor_account_24px));
-            binding.fab.setOnClickListener(v -> {
-                // TODO: 001 01.05.19 Add new ward
-            });
+            binding.fab.setOnClickListener(v -> intentTo(AddWardActivity.class));
         } else {
             addFragment(new ClientsFragment());
             binding.fab.setImageDrawable(getResources().getDrawable(R.drawable.twotone_assignment_24px));
             binding.fab.setOnClickListener(v -> {
-                // TODO: 001 01.05.19 Add new ward
+                intentTo(AssignmentActivity.class);
             });
         }
     }
@@ -99,7 +100,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
                 // Load user's profile image with Glide
                 GlideApp.with(HomeActivity.this)
-                        .load(response.getAvatar() == null ? Constants.DEFAULT_AVATAR_URL : response.getAvatar())
+                        .load(response.getAvatar() == null || TextUtils.isEmpty(response.getAvatar()) ? Constants.DEFAULT_AVATAR_URL : response.getAvatar())
                         .circleCrop()
                         .placeholder(R.drawable.avatar_placeholder)
                         .error(R.drawable.ic_player)
@@ -125,7 +126,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         });
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -145,9 +145,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         switch (item.getItemId()) {
             case R.id.menu_search:
                 intentTo(SearchActivity.class);
-                break;
-            case R.id.menu_request_tutor:
-                intentTo(RequestTutorActivity.class);
                 break;
             case R.id.menu_tutor_requests:
                 addFragment(new RequestsFragment());
@@ -170,7 +167,11 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.menu_logout:
-                // TODO: 001 01.05.19 logout user here
+                Snackbar.make(binding.drawer, getString(R.string.logout), Snackbar.LENGTH_LONG).setAction("Logout", v -> {
+                    auth.signOut();
+                    prefs.logout();
+                    intentTo(MainActivity.class, true);
+                }).show();
                 break;
             case R.id.menu_home:
                 if (BaseUser.Type.PARENT.equals(prefs.getType())) {

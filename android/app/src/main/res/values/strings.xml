@@ -12,4 +12,5 @@
     <string name="register">Join Now</string>
     <string name="request_reset">Send request link</string>
     <string name="password_reset_desc">Enter your email address below. A link will be sent to you shortly</string>
+    <string name="logout">Do you wish to logout?</string>
 </resources>
