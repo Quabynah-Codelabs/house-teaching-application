@@ -45,6 +45,18 @@
         <item name="android:textColor">@color/text_primary_dark</item>
     </style>
 
+    <style name="TextAppearance.HomeTutorAppTheme.Collapsed" parent="Widget.Design.CollapsingToolbar">
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+    </style>
+
+    <style name="TextAppearance.HomeTutorAppTheme.Expanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+    </style>
+
     <style name="HomeTutorAppTheme.TextInputTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="android:colorControlNormal">@color/colorPrimary</item>
         <item name="android:colorActivatedHighlight">@color/colorPrimary</item>

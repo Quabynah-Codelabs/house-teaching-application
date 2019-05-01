@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.codelabs.widget.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <io.codelabs.widget.ForegroundImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/about_peek_height"
+        android:src="@color/content_placeholder"
+        android:id="@+id/empty_view_image"/>
+
+    <io.codelabs.widget.BaselineGridTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingStart="@dimen/padding_normal"
+        android:paddingEnd="@dimen/padding_normal"
+        android:layout_marginTop="@dimen/padding_large"
+        android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.LargeTitle"
+        android:text="@string/oops"/>
+
+    <io.codelabs.widget.BaselineGridTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingStart="@dimen/padding_normal"
+        android:paddingEnd="@dimen/padding_normal"
+        android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
+        android:text="@string/not_found_text"/>
+
+</io.codelabs.widget.ForegroundLinearLayout>
