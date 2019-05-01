@@ -20,4 +20,7 @@ public final class Constants {
     public static final String SHARED_PREFS = "TUTOR_SHARED_PREFS";
     public static final String USER_KEY = "USER_KEY";
     public static final String USER_TYPE = "USER_TYPE";
+
+    // Others
+    public static final String DEFAULT_AVATAR_URL = "https://firebasestorage.googleapis.com/v0/b/house-teaching.appspot.com/o/default-avatar.png?alt=media&token=b1ab3898-f830-42b6-aa08-18c70627bb87";
 }

@@ -6,17 +6,28 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import io.codelabs.digitutor.core.util.AsyncCallback;
+import io.codelabs.digitutor.core.util.Constants;
+import io.codelabs.digitutor.data.BaseUser;
+import io.codelabs.digitutor.data.model.Parent;
+import io.codelabs.digitutor.data.model.Tutor;
 
 /**
  * Firebase data source class
@@ -105,9 +116,84 @@ public final class FirebaseDataSource {
 
     }
 
-    public static void updateUserAvatar(Activity host, FirebaseFirestore firestore, String type, String avatar, AsyncCallback<Void> callback) {
+    public static void updateUserAvatar(Activity host, FirebaseFirestore firestore, String type, String key, String avatar, AsyncCallback<Void> callback) {
         callback.onStart();
+        String collection = type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS;
 
-        // TODO: 030 30.04.19 Update user's profile information
+        // Create a hash map of the fields we are interested in
+        HashMap<String, Object> hashMap = new HashMap<>(0);
+        hashMap.put("avatar", avatar);
+        hashMap.put("token", FirebaseInstanceId.getInstance().getToken());
+
+        // Push data to the database
+        firestore.collection(collection).document(key)
+                .update(hashMap)
+                .addOnCompleteListener(host, task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess(null);
+                    } else {
+                        callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                    }
+                    callback.onComplete();
+                }).addOnFailureListener(host, e -> {
+            callback.onError(e.getLocalizedMessage());
+            callback.onComplete();
+        });
+    }
+
+    /**
+     * Create a new user account
+     *
+     * @param host        Calling Activity
+     * @param auth        Firebase authentication
+     * @param firestore   Database
+     * @param credentials Login credentials
+     * @param type        User type (Parent / Tutor
+     * @param username    Username of account holder
+     * @param callback    Callback for async process
+     */
+    public static void createUser(Activity host, FirebaseAuth auth, FirebaseFirestore firestore, @NotNull LoginCredentials credentials,
+                                  String type, String username, @NotNull AsyncCallback<Void> callback) {
+        callback.onStart();
+        if (credentials.validate()) {
+            auth.createUserWithEmailAndPassword(credentials.getEmail(), credentials.getPassword()).addOnCompleteListener(host,
+                    new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Create user model and set database collection path
+                                String collection = type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS;
+                                BaseUser model = type.equals(BaseUser.Type.PARENT) ? new Parent() : new Tutor();
+                                model.setName(username);
+                                model.setEmail(credentials.getEmail());
+                                model.setType(model instanceof Parent ? BaseUser.Type.PARENT : BaseUser.Type.TUTOR);
+
+                                // Store user information in  the database
+                                firestore.collection(collection).document(Objects.requireNonNull(task.getResult()).getUser().getUid())
+                                        .set(model).addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        callback.onSuccess(null);
+                                        callback.onComplete();
+                                    } else {
+                                        callback.onError(Objects.requireNonNull(task1.getException()).getLocalizedMessage());
+                                        callback.onComplete();
+                                    }
+                                }).addOnFailureListener(e -> {
+                                    callback.onError(e.getLocalizedMessage());
+                                    callback.onComplete();
+                                });
+                            } else {
+                                callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                                callback.onComplete();
+                            }
+                        }
+                    }).addOnFailureListener(host, e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("Invalid login credentials. Please check your email, username and password");
+            callback.onComplete();
+        }
     }
 }

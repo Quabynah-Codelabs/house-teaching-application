@@ -43,7 +43,10 @@
             android:name=".view.RegisterActivity"
             android:theme="@style/HomeTutorAppTheme.Light"
             android:configChanges="orientation|screenLayout|screenSize" />
-        <activity android:name=".view.ResetPassword" />
+        <activity
+            android:name=".view.ResetPassword"
+            android:theme="@style/HomeTutorAppTheme.Light"
+            android:configChanges="orientation|screenLayout|screenSize" />
     </application>
 
 </manifest>

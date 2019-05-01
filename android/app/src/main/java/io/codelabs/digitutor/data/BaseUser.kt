@@ -7,7 +7,8 @@ interface BaseUser : BaseDataModel {
     var email: String?
     var name: String?
     var avatar: String?
-    val type: String
+    var type: String
+    var token: String?
 
     /**
      * Stores the user's type

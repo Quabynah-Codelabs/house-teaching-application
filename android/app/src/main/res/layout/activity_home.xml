@@ -56,6 +56,10 @@
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            app:menu="@menu/drawer_menu"
+            app:itemIconPadding="@dimen/padding_normal"
+            app:elevation="@dimen/z_drawer"
+            app:headerLayout="@layout/header_layout"
             android:id="@+id/nav_view" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
