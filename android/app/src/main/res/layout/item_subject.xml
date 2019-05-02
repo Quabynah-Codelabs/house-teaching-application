@@ -2,14 +2,14 @@
 <io.codelabs.widget.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="@dimen/padding_normal"
+    android:paddingTop="@dimen/padding_normal"
+    android:paddingStart="@dimen/padding_normal"
+    android:paddingEnd="@dimen/padding_normal"
     android:layout_width="match_parent"
-    android:layout_margin="@dimen/spacing_normal"
     android:background="@color/background_card"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
     android:focusable="true"
-    android:stateListAnimator="@animator/raise"
     android:layout_height="wrap_content">
 
     <io.codelabs.widget.BaselineGridTextView
@@ -30,5 +30,11 @@
         android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
         android:id="@+id/subject_desc" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/padding_normal"
+        android:layout_marginTop="@dimen/spacing_micro"
+        android:background="@color/divider"/>
 
 </io.codelabs.widget.ForegroundLinearLayout>

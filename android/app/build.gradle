@@ -60,10 +60,6 @@ dependencies {
     // Codelabs
     implementation 'com.github.Quabynah-Codelabs.quabynah-codelabs-sdk:sdk-library:v1.3.5.2'
 
-    // ButterKnife
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-
     // Unit Testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'

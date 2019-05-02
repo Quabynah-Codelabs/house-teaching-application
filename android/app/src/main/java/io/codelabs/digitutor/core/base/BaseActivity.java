@@ -20,6 +20,7 @@ import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
  * Base class for all {@link android.app.Activity}s
  */
 public abstract class BaseActivity extends AppCompatActivity {
+    // Get instance of the user's shared preferences
     public UserSharedPreferences prefs;
     public FirebaseAuth auth = FirebaseAuth.getInstance();
     public FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -28,8 +29,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Get instance of the user's shared preferences
         prefs = UserSharedPreferences.getInstance(this);
     }
 

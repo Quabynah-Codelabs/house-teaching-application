@@ -60,7 +60,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private void bindEmptyViewHolder(EmptyViewHolder holder) {
+    private void bindEmptyViewHolder(@NotNull EmptyViewHolder holder) {
 
         // Load GIF file into the image view
         GlideApp.with(context)
@@ -104,7 +104,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     public void addData(@NotNull List<Subject> newSubjects) {
         if (newSubjects.isEmpty()) return;
-        boolean add = true;
+        /*boolean add = true;
 
         for (Subject s : newSubjects) {
             add = !subjects.contains(s);
@@ -113,7 +113,10 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 subjects.add(s);
                 notifyItemRangeChanged(0, newSubjects.size());
             }
-        }
+        }*/
+        subjects.clear();
+        subjects.addAll(newSubjects);
+        notifyDataSetChanged();
     }
 
 

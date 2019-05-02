@@ -1,46 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.codelabs.widget.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
-    android:orientation="vertical"
-    tools:context=".view.AddSubjectActivity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <data>
+
+    </data>
+
+    <io.codelabs.widget.ForegroundLinearLayout
+        android:id="@+id/container"
+        android:orientation="vertical"
+        tools:context=".view.AddSubjectActivity"
         android:layout_width="match_parent"
-        android:id="@+id/app_bar"
-        android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
-        android:layout_height="@dimen/shot_collapsed_app_bar_height">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:id="@+id/app_bar"
+            android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
+            android:layout_height="@dimen/shot_collapsed_app_bar_height">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="exitUntilCollapsed|scroll"
+                app:title="@string/subjects"
+                app:contentScrim="@color/scrim"
+                android:id="@+id/collapsing_toolbar"
+                app:expandedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Expanded"
+                app:collapsedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Collapsed"
+                app:toolbarId="@id/toolbar">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_back_light"
+                    app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
+                    android:id="@+id/toolbar" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="exitUntilCollapsed|scroll"
-            app:title="@string/subjects"
-            app:contentScrim="@color/scrim"
-            android:id="@+id/collapsing_toolbar"
-            app:expandedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Expanded"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Collapsed"
-            app:toolbarId="@id/toolbar">
+            android:id="@+id/subjects_grid"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
-                android:id="@+id/toolbar" />
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </io.codelabs.widget.ForegroundLinearLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        android:id="@+id/subjects_grid" />
-
-</io.codelabs.widget.ForegroundLinearLayout>
+</layout>

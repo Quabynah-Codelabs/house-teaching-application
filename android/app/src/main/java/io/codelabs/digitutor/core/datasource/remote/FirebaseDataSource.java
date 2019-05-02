@@ -13,7 +13,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -21,13 +25,17 @@ import com.google.firebase.storage.UploadTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.data.model.Parent;
+import io.codelabs.digitutor.data.model.Subject;
 import io.codelabs.digitutor.data.model.Tutor;
 import io.codelabs.sdk.util.ExtensionUtils;
 
@@ -227,5 +235,26 @@ public final class FirebaseDataSource {
             callback.onError("Please sign in first");
             callback.onComplete();
         }
+    }
+
+    public static void fetchAllSubjects(Activity host, FirebaseFirestore firestore, AsyncCallback<List<Subject>> callback) {
+        callback.onStart();
+        firestore.collection(Constants.SUBJECTS)
+                .orderBy("name", Query.Direction.ASCENDING)
+                .addSnapshotListener(host, (queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        callback.onError(e.getLocalizedMessage());
+                        callback.onComplete();
+                        return;
+                    }
+
+                    if (queryDocumentSnapshots != null) {
+                        List<Subject> subjects = queryDocumentSnapshots.toObjects(Subject.class);
+                        callback.onSuccess(subjects);
+                    } else {
+                        callback.onError("Unable to load subjects");
+                    }
+                    callback.onComplete();
+                });
     }
 }
