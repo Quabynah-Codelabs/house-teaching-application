@@ -39,7 +39,7 @@ public class LoginActivity extends BaseActivity {
     public void createNewAccount(View view) {
         Bundle bundle = new Bundle();
         bundle.putString(RegisterActivity.EXTRA_USER_TYPE, type);
-        intentTo(RegisterActivity.class,bundle, true);
+        intentTo(RegisterActivity.class, bundle, true);
     }
 
     public void resetPassword(View view) {
@@ -83,5 +83,10 @@ public class LoginActivity extends BaseActivity {
                         binding.content.setVisibility(View.VISIBLE);
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        intentTo(MainActivity.class, true);
     }
 }

@@ -74,6 +74,19 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void setupHeaderView() {
+        // Get live data from database
+        if (prefs.getType() != null){
+            getUser();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUser();
+    }
+
+    private void getUser() {
         // Get fields from header view
         View headerView = binding.navView.getHeaderView(0);
         CircularImageView avatar = headerView.findViewById(R.id.header_avatar);
@@ -83,7 +96,6 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         username.setText(prefs.getKey());
         type.setText(String.format("Logged in as: %s", prefs.getType()));
 
-        // Get live data from database
         FirebaseDataSource.getCurrentUser(this, firestore, prefs, new AsyncCallback<BaseUser>() {
             @Override
             public void onError(@Nullable String error) {

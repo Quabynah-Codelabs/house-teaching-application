@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.codelabs.digitutor.R;
+import io.codelabs.digitutor.core.util.OnClickListener;
 import io.codelabs.digitutor.data.model.Subject;
 import io.codelabs.digitutor.view.adapter.viewholder.EmptyViewHolder;
 import io.codelabs.digitutor.view.adapter.viewholder.SubjectViewHolder;
@@ -28,14 +29,16 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<Subject> subjects = new ArrayList<>(0);
     private Context context;
     private final LayoutInflater inflater;
+    private final OnClickListener<Subject> listener;
 
     private static final int TYPE_EMPTY = R.layout.item_empty;
     private static final int TYPE_SUBJECT = R.layout.item_subject;
 
     // Constructor
-    public SubjectAdapter(Context context) {
+    public SubjectAdapter(Context context, OnClickListener<Subject> listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
+        this.listener = listener;
     }
 
     @NonNull
@@ -61,7 +64,6 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private void bindEmptyViewHolder(@NotNull EmptyViewHolder holder) {
-
         // Load GIF file into the image view
         GlideApp.with(context)
                 .asGif()
@@ -72,7 +74,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .into(holder.imageView);
     }
 
-    private void bindSubjectViewHolder(SubjectViewHolder holder, int position) {
+    private void bindSubjectViewHolder(@NotNull SubjectViewHolder holder, int position) {
         // Get the subject for each position in the list
         Subject subject = subjects.get(position);
 
@@ -80,9 +82,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.name.setText(subject.getName());
         holder.desc.setText(TextUtils.isEmpty(subject.getDescription()) ? "N/A" : subject.getDescription());
 
-        holder.itemView.setOnClickListener(v -> {
-            // TODO: 001 01.05.19 Add click action for each subject
-        });
+        holder.itemView.setOnClickListener(v -> listener.onClick(subject, false));
     }
 
     @Override
