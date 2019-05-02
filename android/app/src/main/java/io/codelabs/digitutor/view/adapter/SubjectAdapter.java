@@ -83,6 +83,10 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.desc.setText(TextUtils.isEmpty(subject.getDescription()) ? "N/A" : subject.getDescription());
 
         holder.itemView.setOnClickListener(v -> listener.onClick(subject, false));
+        holder.itemView.setOnLongClickListener(v -> {
+            listener.onClick(subject, true);
+            return true;
+        });
     }
 
     @Override

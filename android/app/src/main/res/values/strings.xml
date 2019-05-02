@@ -16,5 +16,6 @@
     <string name="oops">Oops…</string>
     <string name="not_found_text">Looks like we could not find what you were looking for…</string>
     <string name="subjects">All Subjects</string>
-    <string name="selected_items_hint">%d Selected</string>
+    <string name="selected_items_hint">Item Selected</string>
+    <string name="done">Done</string>
 </resources>

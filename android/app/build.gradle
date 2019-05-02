@@ -61,6 +61,7 @@ dependencies {
     implementation 'com.github.Quabynah-Codelabs.quabynah-codelabs-sdk:sdk-library:v1.3.5.2'
 
     implementation 'com.afollestad:material-cab:2.0.1'
+//    implementation 'com.afollestad:recyclical:0.7.2'
 
     // Unit Testing
     testImplementation 'junit:junit:4.12'

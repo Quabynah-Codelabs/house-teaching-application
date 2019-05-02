@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialcab.attached.AttachedCab
 import com.afollestad.materialcab.attached.destroy
+import com.afollestad.materialcab.attached.isActive
 import com.afollestad.materialcab.attached.isDestroyed
 import com.afollestad.materialcab.createCab
 import io.codelabs.digitutor.R
@@ -40,20 +41,6 @@ class AddSubjectActivity : BaseActivity(), OnClickListener<Subject> {
         binding.subjectsGrid.itemAnimator = SlideInItemAnimator()
         binding.subjectsGrid.addItemDecoration(GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider))
         loadData()
-
-        cab = createCab(R.id.cab_stub) {
-            title(R.string.selected_items_hint)
-            menu(R.menu.cab_menu)
-            titleColor(R.color.text_primary_light)
-            popupTheme(R.style.HomeTutorAppTheme_PopupOverlay)
-            slideDown()
-
-            onSelection {
-                //todo: get selected items here
-                true
-            }
-        }
-
     }
 
     private fun loadData() {
@@ -77,6 +64,27 @@ class AddSubjectActivity : BaseActivity(), OnClickListener<Subject> {
     }
 
     override fun onClick(item: Subject?, isLongClick: Boolean) {
+        if (isLongClick){
+            initCab()
+        } else {
+            //todo: handle click action for subject
+            toast(item?.name)
+        }
+    }
+
+    private fun initCab() {
+        cab = createCab(R.id.cab_stub) {
+            title(literal = getString(R.string.selected_items_hint))
+            menu(R.menu.cab_menu)
+            titleColor(R.color.text_primary_light)
+            popupTheme(R.style.HomeTutorAppTheme_PopupOverlay)
+            slideDown()
+
+            onSelection {
+                //todo: get selected items here
+                true
+            }
+        }
 
     }
 
