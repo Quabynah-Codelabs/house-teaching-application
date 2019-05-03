@@ -33,6 +33,19 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/core_release.kotlin_module'
+    }
 }
 
 dependencies {
@@ -61,7 +74,7 @@ dependencies {
     implementation 'com.github.Quabynah-Codelabs.quabynah-codelabs-sdk:sdk-library:v1.3.5.2'
 
     implementation 'com.afollestad:material-cab:2.0.1'
-//    implementation 'com.afollestad:recyclical:0.7.2'
+    implementation 'com.afollestad:recyclical:0.7.2'
 
     // Unit Testing
     testImplementation 'junit:junit:4.12'

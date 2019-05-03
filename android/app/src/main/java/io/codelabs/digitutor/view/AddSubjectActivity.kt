@@ -3,11 +3,16 @@ package io.codelabs.digitutor.view
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialcab.attached.AttachedCab
 import com.afollestad.materialcab.attached.destroy
 import com.afollestad.materialcab.attached.isActive
 import com.afollestad.materialcab.attached.isDestroyed
 import com.afollestad.materialcab.createCab
+import com.afollestad.recyclical.datasource.selectableDataSourceOf
+import com.afollestad.recyclical.itemdefinition.onChildViewClick
+import com.afollestad.recyclical.setup
+import com.afollestad.recyclical.withItem
 import io.codelabs.digitutor.R
 import io.codelabs.digitutor.core.base.BaseActivity
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource
@@ -16,6 +21,7 @@ import io.codelabs.digitutor.core.util.OnClickListener
 import io.codelabs.digitutor.data.model.Subject
 import io.codelabs.digitutor.databinding.ActivitySubjectBinding
 import io.codelabs.digitutor.view.adapter.SubjectAdapter
+import io.codelabs.digitutor.view.adapter.viewholder.SubjectViewHolder
 import io.codelabs.recyclerview.GridItemDividerDecoration
 import io.codelabs.recyclerview.SlideInItemAnimator
 import io.codelabs.sdk.util.toast
@@ -38,15 +44,38 @@ class AddSubjectActivity : BaseActivity(), OnClickListener<Subject> {
         binding.subjectsGrid.adapter = adapter
         binding.subjectsGrid.layoutManager = LinearLayoutManager(this)
         binding.subjectsGrid.setHasFixedSize(true)
-        binding.subjectsGrid.itemAnimator = SlideInItemAnimator()
+        binding.subjectsGrid.itemAnimator = SlideInItemAnimator() as RecyclerView.ItemAnimator?
         binding.subjectsGrid.addItemDecoration(GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider))
         loadData()
+
+
     }
 
     private fun loadData() {
         FirebaseDataSource.fetchAllSubjects(this, firestore, object : AsyncCallback<MutableList<Subject>?> {
             override fun onSuccess(response: MutableList<Subject>?) {
-                if (response != null) adapter.addData(response)
+                if (response != null){
+                    val dataSource = selectableDataSourceOf(response).apply {
+                        onSelectionChange {
+                            initCab()
+                        }
+                    }
+
+//                    binding.subjectsGrid.setup {
+//                        withEmptyView()
+//                        withDataSource(dataSource)
+//                        withItem<Subject>(R.layout.item_subject) {
+//                            onBind(::SubjectViewHolder) {index, item ->
+//
+//                            }
+//
+//                            onChildViewClick(SubjectViewHolder::itemView){_, view ->
+//
+//                                toggleSelection()
+//                            }
+//                        }
+//                    }
+                }
             }
 
             override fun onComplete() {
