@@ -64,7 +64,12 @@
         <activity
             android:name=".view.kotlin.AddSubjectActivity"
             android:configChanges="orientation|screenLayout|screenSize" />
-        <activity android:name=".view.UserActivity" />
+        <activity
+            android:name=".view.UserActivity"
+            android:configChanges="orientation|screenLayout|screenSize" />
+        <activity
+            android:name=".view.RequestDetailsActivity"
+            android:configChanges="orientation|screenLayout|screenSize" />
 
         <service
             android:name=".core.notification.AppMessagingService"

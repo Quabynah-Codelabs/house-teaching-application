@@ -34,6 +34,7 @@ public class UserActivity extends BaseActivity {
 
         if (getIntent().hasExtra(EXTRA_USER)) {
             binding.setUser(getIntent().getParcelableExtra(EXTRA_USER));
+            ExtensionUtils.debugLog(this, binding.getUser().getKey());
             getRequest(binding.getUser().getKey());
         } else if (getIntent().hasExtra(EXTRA_USER_UID)) {
             Snackbar snackbar = Snackbar.make(binding.container, "Fetching user information", Snackbar.LENGTH_INDEFINITE);
@@ -79,7 +80,8 @@ public class UserActivity extends BaseActivity {
 
             @Override
             public void onSuccess(@Nullable Boolean response) {
-                binding.requestButton.setEnabled(response != null && response);
+                ExtensionUtils.debugLog(UserActivity.this, response);
+                binding.requestButton.setEnabled(response);
             }
 
             @Override
@@ -115,7 +117,7 @@ public class UserActivity extends BaseActivity {
 
                 @Override
                 public void onComplete() {
-                    ExtensionUtils.debugLog(getApplicationContext(), "Request completed");
+                    ExtensionUtils.toast(getApplicationContext(), "Request completed", false);
                 }
             });
             finish();

@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -430,15 +431,16 @@ public final class FirebaseDataSource {
             // Get all requests sent by the current parent
             Query query = firestore.collection(Constants.REQUESTS)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
-                    .whereEqualTo("parent", prefs.getKey());
-
+                    .whereEqualTo("parent", prefs.getKey())
+                    .whereEqualTo("tutor", tutor);
 
             // Get results for a particular tutor
-            if (tutor != null && !TextUtils.isEmpty(tutor)) query.whereEqualTo("tutor", tutor);
+            /*if (tutor != null && !TextUtils.isEmpty(tutor)) */
 
             query.get().addOnCompleteListener(host, task -> {
                 if (task.isSuccessful()) {
-                    callback.onSuccess(!Objects.requireNonNull(task.getResult()).toObjects(Request.class).isEmpty());
+                    ExtensionUtils.debugLog(host, Objects.requireNonNull(task.getResult()).toObjects(Request.class));
+                    callback.onSuccess(Objects.requireNonNull(task.getResult()).toObjects(Request.class).isEmpty());
                     callback.onComplete();
                 } else {
                     callback.onError(task.getException() != null ? task.getException().getLocalizedMessage() : "Could not load requests");
@@ -451,5 +453,30 @@ public final class FirebaseDataSource {
             callback.onError("You need to be logged in first");
             callback.onComplete();
         }
+    }
+
+    /**
+     * Gets the current request by its ID
+     */
+    public static void getCurrentRequest(Activity host, @NotNull FirebaseFirestore firestore, String requestId, @NotNull AsyncCallback<Request> callback) {
+        callback.onStart();
+        firestore.collection(Constants.REQUESTS).document(requestId).get()
+                .addOnCompleteListener(host, task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot snapshot = task.getResult();
+                        if (snapshot != null && snapshot.exists()) {
+                            Request request = snapshot.toObject(Request.class);
+                            callback.onSuccess(request);
+                            callback.onComplete();
+                        }
+                    } else {
+                        callback.onError("Unable to retrieve the desired request. Please try again later");
+                        callback.onComplete();
+                    }
+                }).addOnFailureListener(host, e -> {
+            callback.onError(e.getLocalizedMessage());
+            callback.onComplete();
+        });
+
     }
 }

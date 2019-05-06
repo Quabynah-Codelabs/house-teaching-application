@@ -67,7 +67,7 @@ exports.sendNotification = functions.firestore.document('users/{uid}').onUpdate(
 
 exports.sendRequest = functions.firestore.document('requests/{requestId}').onCreate((change, context) => {
     // Extract the user's ID
-    var requestId = context.params.requestId;
+    var requestId = context.params.requestId ? context.params.requestId : change.id;
     var data = change.data();
 
     // Get the parent and the tutor
@@ -89,6 +89,7 @@ exports.sendRequest = functions.firestore.document('requests/{requestId}').onCre
                             // Send notification
                             admin.messaging().sendToDevice(deviceToken, {
                                 data: {
+                                    id: requestId,
                                     parent: parent,
                                     title: `Request received from ${parentData.name}`,
                                     message: 'Tap on this to view more details',
