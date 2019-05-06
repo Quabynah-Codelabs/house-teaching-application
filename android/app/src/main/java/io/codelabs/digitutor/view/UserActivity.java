@@ -32,10 +32,9 @@ public class UserActivity extends BaseActivity {
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        binding.setPrefs(prefs);
-
         if (getIntent().hasExtra(EXTRA_USER)) {
             binding.setUser(getIntent().getParcelableExtra(EXTRA_USER));
+            getRequest(binding.getUser().getKey());
         } else if (getIntent().hasExtra(EXTRA_USER_UID)) {
             Snackbar snackbar = Snackbar.make(binding.container, "Fetching user information", Snackbar.LENGTH_INDEFINITE);
             FirebaseDataSource.getUser(this, firestore, getIntent().getStringExtra(EXTRA_USER_UID), getIntent().getStringExtra(EXTRA_USER_TYPE), new AsyncCallback<BaseUser>() {
@@ -48,6 +47,9 @@ public class UserActivity extends BaseActivity {
                 @Override
                 public void onSuccess(@Nullable BaseUser response) {
                     binding.setUser(response);
+
+                    if (response == null) return;
+                    getRequest(response.getKey());
                 }
 
                 @Override
@@ -61,8 +63,35 @@ public class UserActivity extends BaseActivity {
                 }
             });
         }
+    }
 
+    /**
+     * Check whether or not user has already sent a request to the tutor
+     *
+     * @param key The tutor's key
+     */
+    private void getRequest(String key) {
+        FirebaseDataSource.getSentRequests(UserActivity.this, firestore, prefs, key, new AsyncCallback<Boolean>() {
+            @Override
+            public void onError(@Nullable String error) {
 
+            }
+
+            @Override
+            public void onSuccess(@Nullable Boolean response) {
+                binding.requestButton.setEnabled(response != null && response);
+            }
+
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     public void requestService(View view) {

@@ -64,3 +64,62 @@ exports.sendNotification = functions.firestore.document('users/{uid}').onUpdate(
         }
     }
 });
+
+exports.sendRequest = functions.firestore.document('requests/{requestId}').onCreate((change, context) => {
+    // Extract the user's ID
+    var requestId = context.params.requestId;
+    var data = change.data();
+
+    // Get the parent and the tutor
+    var parent = data.parent;
+    var tutor = data.tutor;
+
+    // Get the tutor's device token and send a notification to their device
+    admin.firestore().collection('tutors').doc(tutor).get()
+        .then(snapshot => {
+            if (snapshot.exists) {
+                var deviceToken = snapshot.data().token;
+
+                // Get parent's information
+                admin.firestore().collection('parents').doc(parent)
+                    .get().then(querySnapshot => {
+                        if (querySnapshot.exists) {
+                            var parentData = querySnapshot.data();
+
+                            // Send notification
+                            admin.messaging().sendToDevice(deviceToken, {
+                                data: {
+                                    parent: parent,
+                                    title: `Request received from ${parentData.name}`,
+                                    message: 'Tap on this to view more details',
+                                    createdAt: `${new Date().getTime()}`,
+                                    updatedAt: `${data.timestamp}`,
+                                    type: 'tutor-request'
+                                }
+                            }).then(response => {
+                                return console.log('Notification sent to tutor successfully');
+                            }).catch(err => {
+                                if (err) {
+                                    return console.log(err);   
+                                }
+                            })
+
+                        } else {
+                            return console.log("Unable to get the parent.", parent);
+                        }
+                    }).catch(error => {
+                        if (error) {
+                            return console.log(error);
+                        }
+                    })
+
+            } else {
+                return console.log("Unable to get the tutor.", tutor);
+
+            }
+        }).catch(error => {
+            if (error) {
+                return console.log(error);
+            }
+        });
+});

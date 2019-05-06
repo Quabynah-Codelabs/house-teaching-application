@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -355,7 +356,7 @@ public final class FirebaseDataSource {
         }
     }
 
-    public static void requestService(FirebaseFirestore firestore, UserSharedPreferences prefs, String tutor, AsyncCallback<Void> callback) {
+    public static void requestService(@NotNull FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, String tutor, @NotNull AsyncCallback<Void> callback) {
         callback.onStart();
 
         // Document reference created
@@ -379,5 +380,76 @@ public final class FirebaseDataSource {
             callback.onError(e.getLocalizedMessage());
             callback.onComplete();
         });
+    }
+
+    /**
+     * Requests received by a Tutor
+     *
+     * @param host      calling activity
+     * @param firestore Firebase firestore
+     * @param prefs     User shared prefs. Contains user's login key and type
+     * @param callback  Callback function after the process is carried out
+     */
+    public static void getReceivedRequests(Activity host, FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @NotNull AsyncCallback<List<Request>> callback) {
+        callback.onStart();
+
+        if (prefs.isLoggedIn()) {
+            firestore.collection(Constants.REQUESTS)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .whereEqualTo("tutor", prefs.getKey())
+                    .get()
+                    .addOnCompleteListener(host, task -> {
+                        if (task.isSuccessful()) {
+                            callback.onSuccess(Objects.requireNonNull(task.getResult()).toObjects(Request.class));
+                            callback.onComplete();
+                        } else {
+                            callback.onError(task.getException() != null ? task.getException().getLocalizedMessage() : "Could not load requests");
+                        }
+                    }).addOnFailureListener(host, e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("You need to be logged in first");
+            callback.onComplete();
+        }
+    }
+
+    /**
+     * Requests sent by a Parent
+     *
+     * @param host      calling activity
+     * @param firestore Firebase firestore
+     * @param prefs     User shared prefs. Contains user's login key and type
+     * @param callback  Callback function after the process is carried out
+     */
+    public static void getSentRequests(Activity host, FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @Nullable String tutor, @NotNull AsyncCallback<Boolean> callback) {
+        callback.onStart();
+        if (prefs.isLoggedIn()) {
+
+            // Get all requests sent by the current parent
+            Query query = firestore.collection(Constants.REQUESTS)
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .whereEqualTo("parent", prefs.getKey());
+
+
+            // Get results for a particular tutor
+            if (tutor != null && !TextUtils.isEmpty(tutor)) query.whereEqualTo("tutor", tutor);
+
+            query.get().addOnCompleteListener(host, task -> {
+                if (task.isSuccessful()) {
+                    callback.onSuccess(!Objects.requireNonNull(task.getResult()).toObjects(Request.class).isEmpty());
+                    callback.onComplete();
+                } else {
+                    callback.onError(task.getException() != null ? task.getException().getLocalizedMessage() : "Could not load requests");
+                }
+            }).addOnFailureListener(host, e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("You need to be logged in first");
+            callback.onComplete();
+        }
     }
 }
