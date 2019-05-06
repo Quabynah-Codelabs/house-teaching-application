@@ -10,7 +10,7 @@
     <io.codelabs.widget.ForegroundLinearLayout
         android:id="@+id/container"
         android:orientation="vertical"
-        tools:context=".view.AddSubjectActivity"
+        tools:context=".view.kotlin.AddSubjectActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

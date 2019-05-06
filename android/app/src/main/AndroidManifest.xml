@@ -49,7 +49,8 @@
             android:theme="@style/HomeTutorAppTheme.Light"
             android:configChanges="orientation|screenLayout|screenSize" />
         <activity
-            android:name=".view.SearchActivity"
+            android:name=".view.kotlin.SearchActivity"
+            android:theme="@style/HomeTutorAppTheme.Light"
             android:configChanges="orientation|screenLayout|screenSize" />
         <activity
             android:name=".view.RequestTutorActivity"
@@ -61,8 +62,9 @@
             android:name=".view.AssignmentActivity"
             android:configChanges="orientation|screenLayout|screenSize" />
         <activity
-            android:name=".view.AddSubjectActivity"
+            android:name=".view.kotlin.AddSubjectActivity"
             android:configChanges="orientation|screenLayout|screenSize" />
+        <activity android:name=".view.UserActivity" />
     </application>
 
 </manifest>

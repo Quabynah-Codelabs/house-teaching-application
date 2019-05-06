@@ -18,4 +18,5 @@
     <string name="subjects">All Subjects</string>
     <string name="selected_items_hint">Item Selected</string>
     <string name="done">Done</string>
+    <string name="user_details">Details</string>
 </resources>

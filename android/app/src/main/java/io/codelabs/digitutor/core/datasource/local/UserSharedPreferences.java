@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import org.jetbrains.annotations.NotNull;
 
 import io.codelabs.digitutor.core.util.Constants;
+import io.codelabs.digitutor.data.BaseUser;
 import kotlin.jvm.Synchronized;
 import kotlin.jvm.Volatile;
 
@@ -33,13 +34,13 @@ public class UserSharedPreferences {
 
         // Get fields
         key = prefs.getString(Constants.USER_KEY, null);
-        type = prefs.getString(Constants.USER_TYPE, null);
+        type = prefs.getString(Constants.USER_TYPE, BaseUser.Type.PARENT);
 
         isLoggedIn = key != null && !TextUtils.isEmpty(key);
 
         if (isLoggedIn) {
             key = prefs.getString(Constants.USER_KEY, null);
-            type = prefs.getString(Constants.USER_TYPE, null);
+            type = prefs.getString(Constants.USER_TYPE, BaseUser.Type.PARENT);
         }
     }
 

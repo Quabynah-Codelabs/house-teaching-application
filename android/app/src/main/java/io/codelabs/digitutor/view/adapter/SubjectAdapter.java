@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.jetbrains.annotations.NotNull;
@@ -70,6 +71,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .load(R.drawable.not_found)
                 .placeholder(R.color.content_placeholder)
                 .error(R.color.content_placeholder)
+                .priority(Priority.IMMEDIATE)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.imageView);
     }

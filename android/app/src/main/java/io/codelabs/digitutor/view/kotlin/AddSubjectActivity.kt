@@ -1,4 +1,4 @@
-package io.codelabs.digitutor.view
+package io.codelabs.digitutor.view.kotlin
 
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -6,13 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialcab.attached.AttachedCab
 import com.afollestad.materialcab.attached.destroy
-import com.afollestad.materialcab.attached.isActive
 import com.afollestad.materialcab.attached.isDestroyed
 import com.afollestad.materialcab.createCab
 import com.afollestad.recyclical.datasource.selectableDataSourceOf
-import com.afollestad.recyclical.itemdefinition.onChildViewClick
-import com.afollestad.recyclical.setup
-import com.afollestad.recyclical.withItem
 import io.codelabs.digitutor.R
 import io.codelabs.digitutor.core.base.BaseActivity
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource
@@ -21,7 +17,6 @@ import io.codelabs.digitutor.core.util.OnClickListener
 import io.codelabs.digitutor.data.model.Subject
 import io.codelabs.digitutor.databinding.ActivitySubjectBinding
 import io.codelabs.digitutor.view.adapter.SubjectAdapter
-import io.codelabs.digitutor.view.adapter.viewholder.SubjectViewHolder
 import io.codelabs.recyclerview.GridItemDividerDecoration
 import io.codelabs.recyclerview.SlideInItemAnimator
 import io.codelabs.sdk.util.toast
@@ -55,6 +50,7 @@ class AddSubjectActivity : BaseActivity(), OnClickListener<Subject> {
         FirebaseDataSource.fetchAllSubjects(this, firestore, object : AsyncCallback<MutableList<Subject>?> {
             override fun onSuccess(response: MutableList<Subject>?) {
                 if (response != null){
+                    adapter.addData(response)
                     val dataSource = selectableDataSourceOf(response).apply {
                         onSelectionChange {
                             initCab()

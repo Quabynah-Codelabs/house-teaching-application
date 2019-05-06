@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <data>
+
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:id="@+id/grid"
-        android:scrollbarStyle="outsideOverlay" />
+        android:id="@+id/fragment_container">
 
-    <include
-        android:id="@+id/loading"
-        layout="@layout/loading" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:id="@+id/grid"
+            android:scrollbarStyle="outsideOverlay" />
 
-</FrameLayout>
+        <include
+            android:id="@+id/loading"
+            layout="@layout/loading" />
+
+    </FrameLayout>
+</layout>

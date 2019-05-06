@@ -15,6 +15,10 @@
 
         <include
             android:id="@+id/loading"
+            android:layout_marginBottom="@dimen/spacing_gigantic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             layout="@layout/loading" />
 
 

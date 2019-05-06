@@ -1,15 +1,19 @@
 package io.codelabs.digitutor.data.model
 
+import com.google.firebase.iid.FirebaseInstanceId
 import io.codelabs.digitutor.data.BaseDataModel
 import kotlinx.android.parcel.Parcelize
 
 /**
  * [Parent] requests for [Tutor] data model class
- * todo: add additional fields
  */
 @Parcelize
 data class Request(
-        override var key: String
+        override var key: String,
+        val parent: String,
+        val tutor: String,
+        val timestamp: Long = System.currentTimeMillis()
 ) : BaseDataModel {
-    constructor() : this("")
+
+    constructor() : this("", "", "", 0L)
 }

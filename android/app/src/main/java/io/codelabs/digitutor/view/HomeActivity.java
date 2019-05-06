@@ -32,6 +32,8 @@ import io.codelabs.digitutor.view.fragment.RequestsFragment;
 import io.codelabs.digitutor.view.fragment.SchedulesFragment;
 import io.codelabs.digitutor.view.fragment.TimeTableFragment;
 import io.codelabs.digitutor.view.fragment.TutorsFragment;
+import io.codelabs.digitutor.view.kotlin.AddSubjectActivity;
+import io.codelabs.digitutor.view.kotlin.SearchActivity;
 import io.codelabs.sdk.glide.GlideApp;
 import io.codelabs.sdk.util.ExtensionUtils;
 import io.codelabs.widget.CircularImageView;
@@ -62,7 +64,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         // Set FAB icon & click action
         if (BaseUser.Type.PARENT.equals(prefs.getType())) {
             addFragment(new TutorsFragment());
-            binding.fab.setImageDrawable(getResources().getDrawable(R.drawable.twotone_supervisor_account_24px));
+            binding.fab.setImageDrawable(getResources().getDrawable(R.drawable.twotone_group_add_24px));
             binding.fab.setOnClickListener(v -> intentTo(AddWardActivity.class));
         } else {
             addFragment(new ClientsFragment());

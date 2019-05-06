@@ -13,7 +13,9 @@ public final class Constants {
     public static final String SUBJECTS = "subjects";
     public static final String COMPLAINTS = "complaints";
     public static final String TIMETABLES = WARDS + "/%s/timetables"; // String.format(WARDS,parent.key, ward.key);
+    public static final String CLIENTS = TUTORS + "/%s/clients"; // String.format(CLIENTS,tutor.key);
     public static final String REPORTS = "reports";
+    public static final String REQUESTS = "requests";
     public static final String ASSIGNMENTS = TUTORS + "/%s/assignments";    // String.format(WARDS,tutor.key);
 
     // Shared Preferences

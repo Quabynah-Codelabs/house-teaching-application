@@ -10,12 +10,12 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -24,17 +24,22 @@ import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import javax.annotation.Nullable;
+import java.util.concurrent.ExecutionException;
 
 import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
+import io.codelabs.digitutor.core.util.InputValidator;
+import io.codelabs.digitutor.data.BaseDataModel;
 import io.codelabs.digitutor.data.BaseUser;
+import io.codelabs.digitutor.data.model.Complaint;
 import io.codelabs.digitutor.data.model.Parent;
+import io.codelabs.digitutor.data.model.Report;
+import io.codelabs.digitutor.data.model.Request;
 import io.codelabs.digitutor.data.model.Subject;
 import io.codelabs.digitutor.data.model.Tutor;
 import io.codelabs.sdk.util.ExtensionUtils;
@@ -237,7 +242,30 @@ public final class FirebaseDataSource {
         }
     }
 
-    public static void fetchAllSubjects(Activity host, FirebaseFirestore firestore, AsyncCallback<List<Subject>> callback) {
+    public static void getUser(Activity host, @NotNull FirebaseFirestore firestore, String key, @NotNull String type, @NotNull AsyncCallback<BaseUser> callback) {
+        callback.onStart();
+        String collection = type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS;
+        firestore.collection(collection).document(key).addSnapshotListener(host, (documentSnapshot, e) -> {
+            if (e != null) {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+                return;
+            }
+
+            BaseUser user;
+            if (type.equals(BaseUser.Type.PARENT))
+                user = documentSnapshot.toObject(Parent.class);
+            else {
+                user = documentSnapshot.toObject(Tutor.class);
+            }
+
+            // Send live data to the callback
+            callback.onSuccess(user);
+            callback.onComplete();
+        });
+    }
+
+    public static void fetchAllSubjects(Activity host, @NotNull FirebaseFirestore firestore, @NotNull AsyncCallback<List<Subject>> callback) {
         callback.onStart();
         firestore.collection(Constants.SUBJECTS)
                 .orderBy("name", Query.Direction.ASCENDING)
@@ -256,5 +284,100 @@ public final class FirebaseDataSource {
                     }
                     callback.onComplete();
                 });
+    }
+
+    public static void getAllClients(Activity host, @NotNull FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @NotNull AsyncCallback<List<Parent>> callback) {
+        callback.onStart();
+        firestore.collection(String.format(Constants.CLIENTS, prefs.getKey())).orderBy("name", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(host, task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<Parent> parents = task.getResult().toObjects(Parent.class);
+                        callback.onSuccess(parents);
+                        callback.onComplete();
+                    } else {
+                        callback.onError(task.getException().getLocalizedMessage() == null ? "Could not load all clients for this tutor" : task.getException().getLocalizedMessage());
+                        callback.onComplete();
+                    }
+                }).addOnFailureListener(host, e -> {
+            callback.onError(e.getLocalizedMessage());
+            callback.onComplete();
+        });
+    }
+
+    public static void searchFor(/*Activity host,*/ FirebaseFirestore firestore, String query, @NotNull AsyncCallback<List<? extends BaseDataModel>> callback) {
+        callback.onStart();
+        if (InputValidator.INSTANCE.hasValidInput(query)) {
+            // Get all subjects
+            Task<QuerySnapshot> subjectQueryTask = firestore.collection(Constants.SUBJECTS).get();
+
+            // Get all tutors
+            Task<QuerySnapshot> tutorQueryTask = firestore.collection(Constants.TUTORS).get();
+
+            // Get all reports
+            Task<QuerySnapshot> reportQueryTask = firestore.collection(Constants.REPORTS).get();
+            Task<QuerySnapshot> complaintQueryTask = firestore.collection(Constants.COMPLAINTS).get();
+            try {
+                List<Subject> subjects = Tasks.await(subjectQueryTask).toObjects(Subject.class);
+                List<Tutor> tutors = Tasks.await(tutorQueryTask).toObjects(Tutor.class);
+                List<Report> reports = Tasks.await(reportQueryTask).toObjects(Report.class);
+                List<Complaint> complaints = Tasks.await(complaintQueryTask).toObjects(Complaint.class);
+
+                // Results
+                List<BaseDataModel> response = new ArrayList<>(0);
+                for (Subject subject : subjects) {
+                    if (subject.getName().contains(query)) response.add(subject);
+                }
+
+                for (Tutor tutor : tutors) {
+                    if (Objects.requireNonNull(tutor.getName()).contains(query) || Objects.requireNonNull(tutor.getEmail()).contains(query))
+                        response.add(tutor);
+                }
+
+                for (Report report : reports) {
+                    if (report.getWard().contains(query)) response.add(report);
+                }
+
+                for (Complaint complaint : complaints) {
+                    if (complaint.getDescription().contains(query)) response.add(complaint);
+                }
+
+                callback.onSuccess(response);
+                callback.onComplete();
+
+            } catch (ExecutionException | InterruptedException | IllegalStateException e) {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            }
+        } else {
+            callback.onError("Please enter a valid input to query");
+            callback.onComplete();
+        }
+    }
+
+    public static void requestService(FirebaseFirestore firestore, UserSharedPreferences prefs, String tutor, AsyncCallback<Void> callback) {
+        callback.onStart();
+
+        // Document reference created
+        DocumentReference document = firestore.collection(Constants.REQUESTS).document();
+        // Get key from document
+        String key = document.getId();
+
+        // Create new request data model
+        Request request = new Request(key, prefs.getKey(), tutor, System.currentTimeMillis());
+
+
+        document.set(request).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                callback.onSuccess(null);
+                callback.onComplete();
+            } else {
+                callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                callback.onComplete();
+            }
+        }).addOnFailureListener(e -> {
+            callback.onError(e.getLocalizedMessage());
+            callback.onComplete();
+        });
     }
 }
