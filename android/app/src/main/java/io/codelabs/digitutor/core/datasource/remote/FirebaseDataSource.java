@@ -561,8 +561,8 @@ public final class FirebaseDataSource {
     public static void addSubject(FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, Subject subject, @NotNull AsyncCallback<Void> callback) {
         callback.onStart();
         if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.TUTOR)) {
-            // Create a new document reference for the ward
-            DocumentReference document = firestore.collection(String.format(Constants.TUTOR_SUBJECTS, prefs.getKey())).document();
+            // Create a new document reference for the ward. We use the subject's key to avoid duplication of entries
+            DocumentReference document = firestore.collection(String.format(Constants.TUTOR_SUBJECTS, prefs.getKey())).document(subject.getKey());
 
             // Push data to database
             document.set(subject).addOnCompleteListener(task -> {

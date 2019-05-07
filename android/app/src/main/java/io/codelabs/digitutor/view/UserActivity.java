@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -19,6 +20,9 @@ import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.data.model.Subject;
 import io.codelabs.digitutor.data.model.Tutor;
 import io.codelabs.digitutor.databinding.ActivityUserBinding;
+import io.codelabs.digitutor.view.adapter.SubjectAdapter;
+import io.codelabs.recyclerview.GridItemDividerDecoration;
+import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
 
 public class UserActivity extends BaseActivity {
@@ -27,6 +31,7 @@ public class UserActivity extends BaseActivity {
     public static final String EXTRA_USER_TYPE = "EXTRA_USER_TYPE";
 
     private ActivityUserBinding binding;
+    private SubjectAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +39,16 @@ public class UserActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user);
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        // Initialize the adapter
+        adapter = new SubjectAdapter(UserActivity.this, (subject, isLongClick) -> {
+
+        });
+        binding.subjectsGrid.setAdapter(adapter);
+        binding.subjectsGrid.setLayoutManager(new LinearLayoutManager(this));
+        binding.subjectsGrid.setItemAnimator(new SlideInItemAnimator());
+        binding.subjectsGrid.addItemDecoration(new GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider));
+        binding.subjectsGrid.setHasFixedSize(true);
 
         if (getIntent().hasExtra(EXTRA_USER)) {
             binding.setUser(getIntent().getParcelableExtra(EXTRA_USER));
@@ -100,7 +115,7 @@ public class UserActivity extends BaseActivity {
                         @Override
                         public void onSuccess(@Nullable List<Subject> response) {
                             if (response != null) {
-                                // TODO: 007 07.05.19 Add the subjects to the list of subjects for this tutor
+                                adapter.addData(response);
                             }
                         }
 
@@ -131,7 +146,7 @@ public class UserActivity extends BaseActivity {
 
     public void requestService(View view) {
         if (binding.getUser() != null && binding.getUser() instanceof Tutor) {
-            ExtensionUtils.toast(getApplicationContext(), "Sending request", false);
+            ExtensionUtils.toast(getApplicationContext(), "Sending request...", false);
             FirebaseDataSource.requestService(firestore, prefs, binding.getUser().getKey(), new AsyncCallback<Void>() {
                 @Override
                 public void onError(@Nullable String error) {

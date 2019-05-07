@@ -6,5 +6,4 @@ import androidx.annotation.Nullable
  * [Ward] credentials class
  * Helper class in creating a new ward
  */
-data class WardCredentials(var id: String, var name: String,
-                           @Nullable var avatar: String? = null)
+data class WardCredentials(val name: String, @Nullable val avatar: String? = null)

@@ -8,7 +8,7 @@ import com.afollestad.materialcab.attached.AttachedCab
 import com.afollestad.materialcab.attached.destroy
 import com.afollestad.materialcab.attached.isDestroyed
 import com.afollestad.materialcab.createCab
-import com.afollestad.recyclical.datasource.selectableDataSourceOf
+import com.google.android.material.snackbar.Snackbar
 import io.codelabs.digitutor.R
 import io.codelabs.digitutor.core.base.BaseActivity
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource
@@ -49,28 +49,9 @@ class AddSubjectActivity : BaseActivity(), OnClickListener<Subject> {
     private fun loadData() {
         FirebaseDataSource.fetchAllSubjects(this, firestore, object : AsyncCallback<MutableList<Subject>?> {
             override fun onSuccess(response: MutableList<Subject>?) {
-                if (response != null){
+                if (response != null) {
                     adapter.addData(response)
-                    val dataSource = selectableDataSourceOf(response).apply {
-                        onSelectionChange {
-                            initCab()
-                        }
-                    }
 
-//                    binding.subjectsGrid.setup {
-//                        withEmptyView()
-//                        withDataSource(dataSource)
-//                        withItem<Subject>(R.layout.item_subject) {
-//                            onBind(::SubjectViewHolder) {index, item ->
-//
-//                            }
-//
-//                            onChildViewClick(SubjectViewHolder::itemView){_, view ->
-//
-//                                toggleSelection()
-//                            }
-//                        }
-//                    }
                 }
             }
 
@@ -89,11 +70,29 @@ class AddSubjectActivity : BaseActivity(), OnClickListener<Subject> {
     }
 
     override fun onClick(item: Subject?, isLongClick: Boolean) {
-        if (isLongClick){
+        if (isLongClick) {
             initCab()
         } else {
-            //todo: handle click action for subject
-            toast(item?.name)
+            Snackbar.make(binding.container, "Do you wish to add this subject?", Snackbar.LENGTH_LONG).setAction("Add") {
+                FirebaseDataSource.addSubject(firestore, prefs, item, object : AsyncCallback<Void?> {
+                    override fun onSuccess(response: Void?) {
+                        toast("Subject added successfully")
+                    }
+
+                    override fun onComplete() {
+
+                    }
+
+                    override fun onError(error: String?) {
+                        toast(error, true)
+                    }
+
+                    override fun onStart() {
+                        toast("Adding subject...")
+                    }
+                })
+                finishAfterTransition()
+            }.show()
         }
     }
 

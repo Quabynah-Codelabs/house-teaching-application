@@ -6,6 +6,7 @@ import androidx.annotation.Nullable
 import androidx.databinding.BindingAdapter
 import com.google.firebase.iid.FirebaseInstanceId
 import io.codelabs.digitutor.R
+import io.codelabs.digitutor.core.util.Constants
 import io.codelabs.digitutor.data.BaseUser
 import io.codelabs.sdk.glide.GlideApp
 import kotlinx.android.parcel.Parcelize
@@ -26,9 +27,9 @@ data class Parent(override var email: String?,
     companion object {
         @JvmStatic
         @BindingAdapter("imageUrl", "error")
-        fun loadParentAvatar(imageView: ImageView, @Nullable imageUrl: String, error: Drawable) {
+        fun loadParentAvatar(imageView: ImageView, @Nullable imageUrl: String?, error: Drawable) {
             GlideApp.with(imageView.context)
-                    .load(imageUrl)
+                    .load(imageUrl ?: Constants.DEFAULT_AVATAR_URL)
                     .circleCrop()
                     .placeholder(R.drawable.avatar_placeholder)
                     .error(error)

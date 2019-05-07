@@ -7,6 +7,8 @@
 
         <import type="io.codelabs.digitutor.data.BaseUser" />
 
+        <import type="android.view.View" />
+
         <import type="io.codelabs.digitutor.core.util.Constants" />
 
         <variable
@@ -18,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/container"
+        android:background="@color/background_card"
         android:orientation="vertical"
         tools:context=".view.UserActivity">
 
@@ -104,31 +107,45 @@
                     android:text="@{user.email}"
                     tools:text="@string/dummy_email" />
 
-                <io.codelabs.widget.BaselineGridTextView
-                    android:layout_width="wrap_content"
+                <io.codelabs.widget.ForegroundLinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_tertiary_dark"
+                    android:orientation="vertical"
                     android:layout_marginTop="@dimen/spacing_normal"
-                    android:textAppearance="@style/TextAppearance.Comment"
-                    android:text="Email" />
+                    android:visibility="@{user.type != BaseUser.Type.TUTOR ? View.VISIBLE : View.GONE}">
 
-                <io.codelabs.widget.BaselineGridTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Comment"
-                    android:text="@{user.type}"
-                    tools:text="Parent" />
+                    <io.codelabs.widget.BaselineGridTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_tertiary_dark"
+                        android:textAppearance="@style/TextAppearance.Comment"
+                        android:text="@string/subjects" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/HomeTutorAppTheme.Button"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/spacing_large"
-                    android:onClick="requestService"
-                    android:enabled="false"
-                    android:id="@+id/request_button"
-                    android:text="Request Service" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/spacing_micro"
+                        tools:listitem="@layout/item_subject"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:id="@+id/subjects_grid"
+                        tools:itemCount="3" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/HomeTutorAppTheme.Button"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:onClick="requestService"
+                        android:enabled="false"
+                        android:id="@+id/request_button"
+                        android:text="@string/request_service" />
+
+                </io.codelabs.widget.ForegroundLinearLayout>
+
+
 
             </io.codelabs.widget.ForegroundLinearLayout>
 
