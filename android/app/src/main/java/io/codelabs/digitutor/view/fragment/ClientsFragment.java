@@ -73,7 +73,6 @@ public class ClientsFragment extends Fragment {
                         public void onSuccess(@Nullable List<Parent> response) {
                             if (response != null) {
                                 adapter.addData(response);
-                                ExtensionUtils.debugLog(requireContext(), response);
                             }
                         }
 

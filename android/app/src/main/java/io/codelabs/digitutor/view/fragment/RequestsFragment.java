@@ -19,9 +19,10 @@ import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
-import io.codelabs.digitutor.core.util.OnClickListener;
+import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.data.model.Request;
 import io.codelabs.digitutor.databinding.FragmentWithListBinding;
+import io.codelabs.digitutor.view.UserActivity;
 import io.codelabs.digitutor.view.adapter.RequestsAdapter;
 import io.codelabs.recyclerview.GridItemDividerDecoration;
 import io.codelabs.recyclerview.SlideInItemAnimator;
@@ -47,7 +48,10 @@ public class RequestsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         adapter = new RequestsAdapter(requireActivity(), (request, isLongClick) -> {
-
+            Bundle bundle = new Bundle(0);
+            bundle.putString(UserActivity.EXTRA_USER_TYPE, BaseUser.Type.PARENT);
+            bundle.putString(UserActivity.EXTRA_USER_UID, request.getParent());
+            ((BaseActivity) requireActivity()).intentTo(UserActivity.class, bundle, false);
         }, ((BaseActivity) requireActivity()).firestore);
         binding.grid.setAdapter(adapter);
         binding.grid.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -68,14 +72,13 @@ public class RequestsFragment extends Fragment {
                             TransitionManager.beginDelayedTransition(binding.fragmentContainer);
                             binding.grid.setVisibility(View.VISIBLE);
                             binding.loading.setVisibility(View.GONE);
-                            ExtensionUtils.toast(requireContext(), error, true);
+                            ExtensionUtils.toast(requireActivity().getApplicationContext(), error, true);
                         }
 
                         @Override
                         public void onSuccess(@Nullable List<Request> response) {
                             if (response != null) {
                                 adapter.addData(response);
-                                ExtensionUtils.debugLog(requireContext(), response);
                             }
                         }
 

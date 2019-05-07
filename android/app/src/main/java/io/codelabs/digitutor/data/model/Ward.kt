@@ -2,6 +2,7 @@ package io.codelabs.digitutor.data.model
 
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.annotation.Nullable
 import androidx.databinding.BindingAdapter
 import com.google.firebase.iid.FirebaseInstanceId
 import io.codelabs.digitutor.R
@@ -25,7 +26,7 @@ data class Ward(override var email: String?,
     companion object {
         @JvmStatic
         @BindingAdapter("imageUrl", "error")
-        fun loadWardAvatar(imageView: ImageView, imageUrl: String, error: Drawable) {
+        fun loadWardAvatar(imageView: ImageView, @Nullable imageUrl: String, error: Drawable) {
             GlideApp.with(imageView.context)
                     .load(imageUrl)
                     .circleCrop()

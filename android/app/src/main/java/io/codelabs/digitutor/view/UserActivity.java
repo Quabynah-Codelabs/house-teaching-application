@@ -9,11 +9,14 @@ import androidx.databinding.DataBindingUtil;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.data.BaseUser;
+import io.codelabs.digitutor.data.model.Subject;
 import io.codelabs.digitutor.data.model.Tutor;
 import io.codelabs.digitutor.databinding.ActivityUserBinding;
 import io.codelabs.sdk.util.ExtensionUtils;
@@ -72,16 +75,46 @@ public class UserActivity extends BaseActivity {
      * @param key The tutor's key
      */
     private void getRequest(String key) {
+        // Snackbar to show notification on the screen for the current user
+        Snackbar snackbar = Snackbar.make(binding.container, "", Snackbar.LENGTH_LONG);
+
         FirebaseDataSource.getSentRequests(UserActivity.this, firestore, prefs, key, new AsyncCallback<Boolean>() {
             @Override
             public void onError(@Nullable String error) {
-
+                snackbar.setText(error == null ? "An unknown error occurred" : error).show();
             }
 
             @Override
             public void onSuccess(@Nullable Boolean response) {
                 ExtensionUtils.debugLog(UserActivity.this, response);
-                binding.requestButton.setEnabled(response);
+                binding.requestButton.setEnabled(response != null && response);
+
+                if (binding.getUser().getType().equals(BaseUser.Type.TUTOR)) {
+                    // Get all subjects for this tutor
+                    FirebaseDataSource.getTutorSubjects(UserActivity.this, firestore, key, new AsyncCallback<List<Subject>>() {
+                        @Override
+                        public void onError(@Nullable String error) {
+                            snackbar.setText(error == null ? "An unknown error occurred" : error).show();
+                        }
+
+                        @Override
+                        public void onSuccess(@Nullable List<Subject> response) {
+                            if (response != null) {
+                                // TODO: 007 07.05.19 Add the subjects to the list of subjects for this tutor
+                            }
+                        }
+
+                        @Override
+                        public void onStart() {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+                }
             }
 
             @Override

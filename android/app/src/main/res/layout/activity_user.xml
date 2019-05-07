@@ -7,6 +7,8 @@
 
         <import type="io.codelabs.digitutor.data.BaseUser" />
 
+        <import type="io.codelabs.digitutor.core.util.Constants" />
+
         <variable
             name="user"
             type="io.codelabs.digitutor.data.BaseUser" />
@@ -62,7 +64,7 @@
                 <io.codelabs.widget.ForegroundImageView
                     android:layout_width="@dimen/large_avatar_size"
                     android:layout_height="@dimen/large_avatar_size"
-                    app:imageUrl="@{user.avatar}"
+                    app:imageUrl="@{user.avatar == null ? Constants.DEFAULT_AVATAR_URL : user.avatar}"
                     app:error="@{@drawable/avatar_placeholder}"
                     tools:src="@drawable/avatar_placeholder"
                     android:layout_gravity="center_horizontal"

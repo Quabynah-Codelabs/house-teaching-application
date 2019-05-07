@@ -84,7 +84,6 @@ public final class FirebaseDataSource {
         }
     }
 
-
     public static void resetPassword(Activity host, FirebaseAuth auth, String email, AsyncCallback<Void> callback) {
         callback.onStart();
         if (email != null && !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -554,5 +553,60 @@ public final class FirebaseDataSource {
             callback.onError("Please login as a parent first to proceed");
             callback.onComplete();
         }
+    }
+
+    /**
+     * Add new subject
+     */
+    public static void addSubject(FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, Subject subject, @NotNull AsyncCallback<Void> callback) {
+        callback.onStart();
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            // Create a new document reference for the ward
+            DocumentReference document = firestore.collection(String.format(Constants.TUTOR_SUBJECTS, prefs.getKey())).document();
+
+            // Push data to database
+            document.set(subject).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    callback.onSuccess(null);
+                    callback.onComplete();
+                } else {
+                    callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                    callback.onComplete();
+                }
+            }).addOnFailureListener(e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+
+
+        } else {
+            callback.onError("Please login as a parent first to proceed");
+            callback.onComplete();
+        }
+    }
+
+    /**
+     * Get all Subjects for this Tutor
+     */
+    public static void getTutorSubjects(Activity host, @NotNull FirebaseFirestore firestore, String tutor, @NotNull AsyncCallback<List<Subject>> callback) {
+        callback.onStart();
+        firestore.collection(String.format(Constants.TUTOR_SUBJECTS, tutor)).get()
+                .addOnCompleteListener(host, task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot snapshot = task.getResult();
+                        if (snapshot != null) {
+                            callback.onSuccess(snapshot.toObjects(Subject.class));
+                        } else {
+                            callback.onError("Cannot retrieve subjects at this time");
+                        }
+                        callback.onComplete();
+                    } else {
+                        callback.onError("Unable to retrieve subjects for this tutor");
+                        callback.onComplete();
+                    }
+                }).addOnFailureListener(host, e -> {
+
+        });
+
     }
 }

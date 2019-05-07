@@ -124,3 +124,4 @@ exports.sendRequest = functions.firestore.document('requests/{requestId}').onCre
             }
         });
 });
+
