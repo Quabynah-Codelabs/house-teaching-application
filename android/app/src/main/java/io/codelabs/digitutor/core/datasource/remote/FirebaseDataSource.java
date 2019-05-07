@@ -44,6 +44,7 @@ import io.codelabs.digitutor.data.model.Report;
 import io.codelabs.digitutor.data.model.Request;
 import io.codelabs.digitutor.data.model.Subject;
 import io.codelabs.digitutor.data.model.Tutor;
+import io.codelabs.digitutor.data.model.Ward;
 import io.codelabs.sdk.util.ExtensionUtils;
 
 /**
@@ -307,6 +308,25 @@ public final class FirebaseDataSource {
         });
     }
 
+    public static void getAllTutors(Activity host, @NotNull FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @NotNull AsyncCallback<List<Tutor>> callback) {
+        callback.onStart();
+        firestore.collection(Constants.TUTORS).orderBy("name", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(host, task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<Tutor> tutors = task.getResult().toObjects(Tutor.class);
+                        callback.onSuccess(tutors);
+                        callback.onComplete();
+                    } else {
+                        callback.onError(task.getException().getLocalizedMessage() == null ? "Could not load all tutors at this time" : task.getException().getLocalizedMessage());
+                        callback.onComplete();
+                    }
+                }).addOnFailureListener(host, e -> {
+            callback.onError(e.getLocalizedMessage());
+            callback.onComplete();
+        });
+    }
+
     public static void searchFor(/*Activity host,*/ FirebaseFirestore firestore, String query, @NotNull AsyncCallback<List<? extends BaseDataModel>> callback) {
         callback.onStart();
         if (InputValidator.INSTANCE.hasValidInput(query)) {
@@ -478,5 +498,61 @@ public final class FirebaseDataSource {
             callback.onComplete();
         });
 
+    }
+
+    /**
+     * Add new ward
+     */
+    public static void addWard(FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, WardCredentials credentials, @NotNull AsyncCallback<Void> callback) {
+        callback.onStart();
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.PARENT)) {
+            firestore.collection(Constants.PARENTS).document(prefs.getKey()).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot snapshot = task.getResult();
+                            if (snapshot == null) {
+                                callback.onError("Could not current parent\'s information");
+                                callback.onComplete();
+                                return;
+                            }
+
+                            // Get parent's information
+                            Parent parent = snapshot.toObject(Parent.class);
+
+                            // Create a new document reference for the ward
+                            DocumentReference document = firestore.collection(String.format(Constants.WARDS, prefs.getKey())).document();
+
+                            // Create new Ward
+                            Ward ward = new Ward(Objects.requireNonNull(parent).getEmail(), credentials.getName(), credentials.getAvatar(), document.getId(), parent.getToken(), BaseUser.Type.WARD);
+
+                            // Push data to database
+                            document.set(ward).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    // Add new ward credentials
+                                    parent.getWards().add(document.getId());
+
+                                    // Update parents list of wards
+                                    firestore.collection(Constants.PARENTS).document(prefs.getKey())
+                                            .set(parent)
+                                            .addOnCompleteListener(task2 -> {
+                                                callback.onSuccess(null);
+                                                callback.onComplete();
+                                            });
+                                }
+                            });
+                        } else {
+                            callback.onError("Could not get the current user");
+                            callback.onComplete();
+                        }
+                    }).addOnFailureListener(e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+
+
+        } else {
+            callback.onError("Please login as a parent first to proceed");
+            callback.onComplete();
+        }
     }
 }

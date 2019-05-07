@@ -15,23 +15,23 @@ import java.util.List;
 
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.util.OnClickListener;
-import io.codelabs.digitutor.data.model.Parent;
+import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.view.adapter.viewholder.EmptyViewHolder;
 import io.codelabs.digitutor.view.adapter.viewholder.UserViewHolder;
 import io.codelabs.sdk.glide.GlideApp;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class ParentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Parent> parents = new ArrayList<>(0);
+public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private List<BaseUser> users = new ArrayList<>(0);
     private static final int TYPE_EMPTY = R.layout.item_empty;
     private static final int TYPE_USER = R.layout.item_user;
 
     private final LayoutInflater inflater;
     private final Context context;
-    private final OnClickListener<Parent> listener;
+    private final OnClickListener<BaseUser> listener;
 
-    public ParentsAdapter(Context context, OnClickListener<Parent> listener) {
+    public UsersAdapter(Context context, OnClickListener<BaseUser> listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.listener = listener;
@@ -52,7 +52,7 @@ public class ParentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return parents.isEmpty() ? TYPE_EMPTY : TYPE_USER;
+        return users.isEmpty() ? TYPE_EMPTY : TYPE_USER;
     }
 
     @Override
@@ -75,13 +75,13 @@ public class ParentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void bindUserViewHolder(UserViewHolder holder, int position) {
 
-        Parent parent = parents.get(position);
-        holder.username.setText(parent.getName());
-        holder.info.setText(parent.getEmail()); // TODO: 005 05.05.19 Get additional information about this parent (Like date added and so on)
+        BaseUser user = users.get(position);
+        holder.username.setText(user.getName());
+        holder.info.setText(user.getEmail()); // TODO: 005 05.05.19 Get additional information about this parent (Like date added and so on)
 
         // Load profile image
         GlideApp.with(context)
-                .load(parent.getAvatar())
+                .load(user.getAvatar())
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .circleCrop()
                 .priority(Priority.IMMEDIATE)
@@ -91,21 +91,21 @@ public class ParentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .into(holder.avatar);
 
         holder.itemView.setOnLongClickListener(v -> {
-            listener.onClick(parent, true);
+            listener.onClick(user, true);
             return true;
         });
 
-        holder.itemView.setOnClickListener(v -> listener.onClick(parent, false));
+        holder.itemView.setOnClickListener(v -> listener.onClick(user, false));
     }
 
     @Override
     public int getItemCount() {
-        return parents.isEmpty() ? 1 : parents.size();
+        return users.isEmpty() ? 1 : users.size();
     }
 
-    public void addData(List<Parent> parents) {
-        this.parents.clear();
-        this.parents.addAll(parents);
+    public void addData(List<? extends BaseUser> users) {
+        this.users.clear();
+        this.users.addAll(users);
         notifyDataSetChanged();
     }
 }

@@ -18,9 +18,14 @@ import androidx.databinding.DataBindingUtil;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.HashMap;
 
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
+import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
@@ -81,6 +86,50 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             getUser();
         }
     }
+
+    @Override
+    public void onEnterAnimationComplete() {
+        try {
+            // Now compare the old token with the new one and send information to the database server
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        if (task.getResult() != null) {
+                            String token = task.getResult().getToken();
+                            sendRegistrationToServer(token);
+                        }
+                    });
+        } catch (Exception e) {
+            ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
+        }
+    }
+
+    private void sendRegistrationToServer(String token) {
+        UserSharedPreferences instance = UserSharedPreferences.getInstance(this);
+        if (instance.isLoggedIn()) {
+            String type = instance.getType();
+
+            // Create a map of the new token and time updated
+            HashMap<String, Object> hashMap = new HashMap<>(0);
+            hashMap.put("token", token);
+            hashMap.put("updatedAt", System.currentTimeMillis());
+
+            // Send data to the database server
+            FirebaseFirestore.getInstance().collection(type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS)
+                    .document(instance.getKey())
+                    .update(hashMap)
+                    .addOnCompleteListener(task -> {
+                        ExtensionUtils.debugLog(getApplicationContext(), "Token updated");
+                    }).addOnFailureListener(e -> {
+                ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
+            });
+        }
+    }
+
 
     @Override
     protected void onResume() {

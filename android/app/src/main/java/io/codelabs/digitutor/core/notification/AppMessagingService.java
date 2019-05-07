@@ -10,21 +10,14 @@ import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import io.codelabs.digitutor.R;
-import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
-import io.codelabs.digitutor.core.util.Constants;
-import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.view.RequestDetailsActivity;
-import io.codelabs.sdk.util.ExtensionUtils;
 
 /**
  * Send and receive push notifications from the firebase messaging service
@@ -36,56 +29,6 @@ public class AppMessagingService extends FirebaseMessagingService {
     public static final int NOTIFICATION_ICON = R.drawable.shr_logo;
     public static final int NOTIFICATION_ID = (int) System.currentTimeMillis();
     public static final String TYPE_REQUEST = "tutor-request";
-
-
-    @Override
-    public void onNewToken(String s) {
-        super.onNewToken(s);
-        sendRegistrationToServer(s);
-
-        try {
-            // Now compare the old token with the new one and send information to the database server
-            FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(task -> {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        if (task.getResult() != null) {
-                            String token = task.getResult().getToken();
-                            ExtensionUtils.debugLog(getApplicationContext(), String.format("Old token: %s. \nNew Token: %s", s, token));
-                            if (!s.equals(token)) {
-                                sendRegistrationToServer(token);
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
-        }
-    }
-
-    private void sendRegistrationToServer(String token) {
-        UserSharedPreferences instance = UserSharedPreferences.getInstance(this);
-        if (instance.isLoggedIn()) {
-            String type = instance.getType();
-
-            // Create a map of the new token and time updated
-            HashMap<String, Object> hashMap = new HashMap<>(0);
-            hashMap.put("token", token);
-            hashMap.put("updatedAt", System.currentTimeMillis());
-
-            // Send data to the database server
-            FirebaseFirestore.getInstance().collection(type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS)
-                    .document(instance.getKey())
-                    .update(hashMap)
-                    .addOnCompleteListener(task -> {
-                        ExtensionUtils.debugLog(getApplicationContext(), "Token updated");
-                    }).addOnFailureListener(e -> {
-                ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
-            });
-        }
-    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -100,7 +43,7 @@ public class AppMessagingService extends FirebaseMessagingService {
                 case TYPE_REQUEST:
                     // Add data to intent
                     Intent i = new Intent(getApplicationContext(), RequestDetailsActivity.class);
-                    i.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, data.get("requestId"));
+                    i.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, data.get("id"));
                     i.putExtra(RequestDetailsActivity.EXTRA_REQUEST_PARENT, data.get("parent"));
 
                     // Send notification to device

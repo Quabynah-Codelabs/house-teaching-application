@@ -21,14 +21,14 @@ import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.data.model.Parent;
 import io.codelabs.digitutor.databinding.FragmentWithListBinding;
-import io.codelabs.digitutor.view.adapter.ParentsAdapter;
+import io.codelabs.digitutor.view.adapter.UsersAdapter;
 import io.codelabs.recyclerview.GridItemDividerDecoration;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
 
 public class ClientsFragment extends Fragment {
     private FragmentWithListBinding binding;
-    private ParentsAdapter adapter;
+    private UsersAdapter adapter;
 
     public ClientsFragment() {
     }
@@ -44,7 +44,7 @@ public class ClientsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new ParentsAdapter(requireContext(), (parent, isLongClick) -> {
+        adapter = new UsersAdapter(requireContext(), (parent, isLongClick) -> {
             // TODO: 005 05.05.19 perform action when user clicks on each parent in the list
         });
         binding.grid.setAdapter(adapter);

@@ -1,6 +1,5 @@
 package io.codelabs.digitutor.data.model
 
-import com.google.firebase.iid.FirebaseInstanceId
 import io.codelabs.digitutor.data.BaseDataModel
 import kotlinx.android.parcel.Parcelize
 
