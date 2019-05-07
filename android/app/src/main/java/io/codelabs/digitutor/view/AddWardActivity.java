@@ -71,7 +71,7 @@ public class AddWardActivity extends BaseActivity {
 
                         @Override
                         public void onStart() {
-
+                            ExtensionUtils.toast(AddWardActivity.this.getApplicationContext(), "Registering your ward...", false);
                         }
 
                         @Override
@@ -92,8 +92,9 @@ public class AddWardActivity extends BaseActivity {
                 }
             });
             finishAfterTransition();
+        } else {
+            ExtensionUtils.toast(AddWardActivity.this.getApplicationContext(), "Please add a photo of your ward and his/ her full name", true);
         }
-
     }
 
     @Override
