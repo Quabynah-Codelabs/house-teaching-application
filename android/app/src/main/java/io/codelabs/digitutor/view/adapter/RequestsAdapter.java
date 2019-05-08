@@ -1,32 +1,32 @@
 package io.codelabs.digitutor.view.adapter;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import io.codelabs.digitutor.R;
+import io.codelabs.digitutor.core.base.BaseActivity;
+import io.codelabs.digitutor.core.util.Constants;
+import io.codelabs.digitutor.core.util.OnClickListener;
+import io.codelabs.digitutor.data.BaseUser;
+import io.codelabs.digitutor.data.model.Parent;
+import io.codelabs.digitutor.data.model.Request;
+import io.codelabs.digitutor.view.UserActivity;
+import io.codelabs.digitutor.view.adapter.viewholder.EmptyViewHolder;
+import io.codelabs.digitutor.view.adapter.viewholder.UserViewHolder;
+import io.codelabs.sdk.glide.GlideApp;
+import io.codelabs.sdk.util.ExtensionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
-import io.codelabs.digitutor.R;
-import io.codelabs.digitutor.core.util.Constants;
-import io.codelabs.digitutor.core.util.OnClickListener;
-import io.codelabs.digitutor.data.model.Parent;
-import io.codelabs.digitutor.data.model.Request;
-import io.codelabs.digitutor.view.adapter.viewholder.EmptyViewHolder;
-import io.codelabs.digitutor.view.adapter.viewholder.UserViewHolder;
-import io.codelabs.sdk.glide.GlideApp;
-import io.codelabs.sdk.util.ExtensionUtils;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -110,6 +110,13 @@ public class RequestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 .error(R.drawable.ic_player)
                                 .transition(withCrossFade())
                                 .into(holder.avatar);
+
+                        holder.avatar.setOnClickListener(v -> {
+                            Bundle bundle = new Bundle(0);
+                            bundle.putString(UserActivity.EXTRA_USER_TYPE, BaseUser.Type.PARENT);
+                            bundle.putString(UserActivity.EXTRA_USER_UID, request.getParent());
+                            ((BaseActivity) context).intentTo(UserActivity.class, bundle, false);
+                        });
                     }
                 });
 

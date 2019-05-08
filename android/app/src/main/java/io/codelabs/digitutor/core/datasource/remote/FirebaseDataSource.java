@@ -5,25 +5,26 @@ import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Patterns;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
+import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
+import io.codelabs.digitutor.core.util.AsyncCallback;
+import io.codelabs.digitutor.core.util.Constants;
+import io.codelabs.digitutor.core.util.InputValidator;
+import io.codelabs.digitutor.data.BaseDataModel;
+import io.codelabs.digitutor.data.BaseUser;
+import io.codelabs.digitutor.data.model.*;
+import io.codelabs.sdk.util.ExtensionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -31,21 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-
-import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
-import io.codelabs.digitutor.core.util.AsyncCallback;
-import io.codelabs.digitutor.core.util.Constants;
-import io.codelabs.digitutor.core.util.InputValidator;
-import io.codelabs.digitutor.data.BaseDataModel;
-import io.codelabs.digitutor.data.BaseUser;
-import io.codelabs.digitutor.data.model.Complaint;
-import io.codelabs.digitutor.data.model.Parent;
-import io.codelabs.digitutor.data.model.Report;
-import io.codelabs.digitutor.data.model.Request;
-import io.codelabs.digitutor.data.model.Subject;
-import io.codelabs.digitutor.data.model.Tutor;
-import io.codelabs.digitutor.data.model.Ward;
-import io.codelabs.sdk.util.ExtensionUtils;
 
 /**
  * Firebase data source class
@@ -417,18 +403,21 @@ public final class FirebaseDataSource {
             firestore.collection(Constants.REQUESTS)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .whereEqualTo("tutor", prefs.getKey())
-                    .get()
-                    .addOnCompleteListener(host, task -> {
-                        if (task.isSuccessful()) {
-                            callback.onSuccess(Objects.requireNonNull(task.getResult()).toObjects(Request.class));
+                    .addSnapshotListener(host, (queryDocumentSnapshots, e) -> {
+                        if (e != null) {
+                            callback.onError(e.getLocalizedMessage());
                             callback.onComplete();
-                        } else {
-                            callback.onError(task.getException() != null ? task.getException().getLocalizedMessage() : "Could not load requests");
+                            return;
                         }
-                    }).addOnFailureListener(host, e -> {
-                callback.onError(e.getLocalizedMessage());
-                callback.onComplete();
-            });
+
+                        if (queryDocumentSnapshots != null) {
+                            callback.onSuccess(queryDocumentSnapshots.toObjects(Request.class));
+                        } else {
+                            callback.onError("unable to get received requests for this tutor");
+                        }
+                        callback.onComplete();
+
+                    });
         } else {
             callback.onError("You need to be logged in first");
             callback.onComplete();
@@ -608,5 +597,43 @@ public final class FirebaseDataSource {
 
         });
 
+    }
+
+    public static void toggleTutorRequest(FirebaseFirestore firestore,
+                                          UserSharedPreferences prefs, Parent parent,
+                                          boolean state,
+                                          String requestId, AsyncCallback<Void> callback) {
+        callback.onStart();
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            if (state) {
+                DocumentReference document = firestore.collection(String.format(Constants.CLIENTS, prefs.getKey())).document(parent.getKey());
+                document.set(parent).addOnFailureListener(e -> {
+                    callback.onError(e.getLocalizedMessage());
+                    callback.onComplete();
+                }).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        firestore.collection(Constants.REQUESTS).document(requestId).delete()
+                                .addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) callback.onSuccess(null);
+                                    else callback.onError("Unable to save client");
+                                    callback.onComplete();
+                                });
+                    } else {
+                        callback.onError("Unable to save client");
+                        callback.onComplete();
+                    }
+                });
+            } else  {
+                firestore.collection(Constants.REQUESTS).document(requestId).delete()
+                        .addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) callback.onSuccess(null);
+                            else callback.onError("Unable to delete request");
+                            callback.onComplete();
+                        });
+            }
+        } else {
+            callback.onError("Unable to add parent to your clients");
+            callback.onComplete();
+        }
     }
 }

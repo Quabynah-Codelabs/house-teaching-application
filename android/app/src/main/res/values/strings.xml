@@ -23,4 +23,10 @@
     <string name="request_service">Request Service</string>
     <string name="add_ward">Add my ward</string>
     <string name="proceed">Proceed</string>
+    <string name="request_details">Request details</string>
+    <string name="timestamp">Time sent</string>
+    <string name="showing_details_of_parent">Showing details of Parent…</string>
+    <string name="wards">Ward(s)</string>
+    <string name="decline_request">Decline Request</string>
+    <string name="accept_request">Accept Request</string>
 </resources>

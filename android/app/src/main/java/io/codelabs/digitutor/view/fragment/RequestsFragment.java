@@ -4,29 +4,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.TransitionManager;
-
-import java.util.List;
-import java.util.Objects;
-
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
-import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.data.model.Request;
 import io.codelabs.digitutor.databinding.FragmentWithListBinding;
-import io.codelabs.digitutor.view.UserActivity;
+import io.codelabs.digitutor.view.RequestDetailsActivity;
 import io.codelabs.digitutor.view.adapter.RequestsAdapter;
 import io.codelabs.recyclerview.GridItemDividerDecoration;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 public class RequestsFragment extends Fragment {
 
@@ -48,10 +45,12 @@ public class RequestsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         adapter = new RequestsAdapter(requireActivity(), (request, isLongClick) -> {
+
             Bundle bundle = new Bundle(0);
-            bundle.putString(UserActivity.EXTRA_USER_TYPE, BaseUser.Type.PARENT);
-            bundle.putString(UserActivity.EXTRA_USER_UID, request.getParent());
-            ((BaseActivity) requireActivity()).intentTo(UserActivity.class, bundle, false);
+            bundle.putString(RequestDetailsActivity.EXTRA_REQUEST_ID, request.getKey());
+            bundle.putString(RequestDetailsActivity.EXTRA_REQUEST_PARENT, request.getParent());
+            ((BaseActivity) requireActivity()).intentTo(RequestDetailsActivity.class, bundle, false);
+
         }, ((BaseActivity) requireActivity()).firestore);
         binding.grid.setAdapter(adapter);
         binding.grid.setLayoutManager(new LinearLayoutManager(requireContext()));
