@@ -101,7 +101,7 @@ exports.sendRequest = functions.firestore.document('requests/{requestId}').onCre
                                 return console.log('Notification sent to tutor successfully');
                             }).catch(err => {
                                 if (err) {
-                                    return console.log(err);   
+                                    return console.log(err);
                                 }
                             })
 
@@ -125,3 +125,62 @@ exports.sendRequest = functions.firestore.document('requests/{requestId}').onCre
         });
 });
 
+exports.notifyRequest = functions.firestore.document('requests/{requestId}').onWrite((change, context) => {
+    // Extract the user's ID
+    var requestId = context.params.requestId ? context.params.requestId : change.id;
+    var data = change.before.data();
+
+    // Get the parent and the tutor
+    var parent = data.parent;
+    var tutor = data.tutor;
+
+    // Get the parent's device token and send a notification to their device
+    // Get parent's information
+    admin.firestore().collection('parents').doc(parent)
+        .get().then(querySnapshot => {
+            if (querySnapshot.exists) {
+                var parentData = querySnapshot.data();
+                var deviceToken = parentData.token;
+
+                admin.firestore().collection('tutors').doc(tutor)
+                    .get()
+                    .then(snapshot => {
+
+                        if (snapshot.exists) {
+                            // Send notification
+                            admin.messaging().sendToDevice(deviceToken, {
+                                data: {
+                                    id: requestId,
+                                    tutor: snapshot.data().key,
+                                    title: `Service request update`,
+                                    message: 'Your request for service was accepted',
+                                    createdAt: `${new Date().getTime()}`,
+                                    updatedAt: `${data.timestamp}`,
+                                    type: 'tutor-request-status'
+                                }
+                            }).then(response => {
+                                return console.log('Notification sent to tutor successfully');
+                            }).catch(err => {
+                                if (err) {
+                                    return console.log(err);
+                                }
+                            })
+                        } else {
+                            return console.log("Unable to get this tutor.", tutor);
+                            
+                        }
+                    }).catch(err => {
+                        if (err) {
+                            return console.log(err);
+                        }
+                    })
+
+            } else {
+                return console.log("Unable to get the parent.", parent);
+            }
+        }).catch(error => {
+            if (error) {
+                return console.log(error);
+            }
+        })
+});
