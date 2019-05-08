@@ -2,16 +2,11 @@ package io.codelabs.digitutor.view;
 
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
-
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
@@ -24,6 +19,8 @@ import io.codelabs.digitutor.view.adapter.SubjectAdapter;
 import io.codelabs.recyclerview.GridItemDividerDecoration;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
+
+import java.util.List;
 
 public class UserActivity extends BaseActivity {
     public static final String EXTRA_USER = "EXTRA_USER";
@@ -42,7 +39,7 @@ public class UserActivity extends BaseActivity {
 
         // Initialize the adapter
         adapter = new SubjectAdapter(UserActivity.this, (subject, isLongClick) -> {
-
+            // do nothing
         });
         binding.subjectsGrid.setAdapter(adapter);
         binding.subjectsGrid.setLayoutManager(new LinearLayoutManager(this));
@@ -52,7 +49,7 @@ public class UserActivity extends BaseActivity {
 
         if (getIntent().hasExtra(EXTRA_USER)) {
             binding.setUser(getIntent().getParcelableExtra(EXTRA_USER));
-            ExtensionUtils.debugLog(this, binding.getUser().getKey());
+            ExtensionUtils.debugLog(this, binding.getUser().getType());
             getRequest(binding.getUser().getKey());
         } else if (getIntent().hasExtra(EXTRA_USER_UID)) {
             Snackbar snackbar = Snackbar.make(binding.container, "Fetching user information", Snackbar.LENGTH_INDEFINITE);
@@ -65,9 +62,9 @@ public class UserActivity extends BaseActivity {
 
                 @Override
                 public void onSuccess(@Nullable BaseUser response) {
-                    binding.setUser(response);
-
                     if (response == null) return;
+                    ExtensionUtils.debugLog(UserActivity.this, response.getType());
+                    binding.setUser(response);
                     getRequest(response.getKey());
                 }
 
@@ -92,6 +89,7 @@ public class UserActivity extends BaseActivity {
     private void getRequest(String key) {
         // Snackbar to show notification on the screen for the current user
         Snackbar snackbar = Snackbar.make(binding.container, "", Snackbar.LENGTH_LONG);
+        binding.tutorContent.setVisibility(binding.getUser().getType().equals(BaseUser.Type.TUTOR) ? View.VISIBLE : View.GONE);
 
         FirebaseDataSource.getSentRequests(UserActivity.this, firestore, prefs, key, new AsyncCallback<Boolean>() {
             @Override

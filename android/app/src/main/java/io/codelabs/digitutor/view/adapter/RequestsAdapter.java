@@ -98,7 +98,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         Parent user = documentSnapshot.toObject(Parent.class);
 
                         holder.username.setText(Objects.requireNonNull(user).getName());
-                        holder.info.setText(String.format(Locale.getDefault(), "%d wards", user.getWards().size()));
+                        holder.info.setText(String.format(Locale.getDefault(), "%d ward(s)", user.getWards().size()));
 
                         // Load profile image
                         GlideApp.with(context)

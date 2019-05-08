@@ -117,6 +117,8 @@
                     android:layout_marginEnd="@dimen/padding_large"
                     android:hint="@string/password"
                     android:layout_marginTop="@dimen/spacing_normal"
+                    app:passwordToggleDrawable="@drawable/asl_password_visibility"
+                    app:passwordToggleEnabled="true"
                     style="@style/HomeTutorAppTheme.TextInputTheme"
                     android:layout_height="wrap_content">
 

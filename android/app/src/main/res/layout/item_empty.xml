@@ -6,11 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--Todo: show this image-->
     <io.codelabs.widget.ForegroundImageView
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:visibility="gone"
         android:src="@color/content_placeholder"
-        android:id="@+id/empty_view_image"/>
+        android:id="@+id/empty_view_image" />
 
     <io.codelabs.widget.BaselineGridTextView
         android:layout_width="wrap_content"
@@ -20,7 +22,7 @@
         android:paddingEnd="@dimen/padding_normal"
         android:layout_marginTop="@dimen/padding_large"
         android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.LargeTitle"
-        android:text="@string/oops"/>
+        android:text="@string/oops" />
 
     <io.codelabs.widget.BaselineGridTextView
         android:layout_width="wrap_content"
@@ -29,6 +31,6 @@
         android:paddingStart="@dimen/padding_normal"
         android:paddingEnd="@dimen/padding_normal"
         android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
-        android:text="@string/not_found_text"/>
+        android:text="@string/not_found_text" />
 
 </io.codelabs.widget.ForegroundLinearLayout>

@@ -9,6 +9,7 @@ import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
+import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.data.model.Request;
 import io.codelabs.digitutor.databinding.ActivityRequestDetailsBinding;
 import io.codelabs.sdk.util.ExtensionUtils;
@@ -47,6 +48,31 @@ public class RequestDetailsActivity extends BaseActivity {
                     // TODO: 006 06.05.19 Hide loading
                 }
             });
+
+            if (getIntent().hasExtra(EXTRA_REQUEST_PARENT)) {
+                FirebaseDataSource.getUser(this, firestore, getIntent().getStringExtra(EXTRA_REQUEST_PARENT), BaseUser.Type.PARENT, new AsyncCallback<BaseUser>() {
+                    @Override
+                    public void onError(@Nullable String error) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@Nullable BaseUser response) {
+                        ExtensionUtils.debugLog(RequestDetailsActivity.this, response);
+                        if (response != null) binding.setUser(response);
+                    }
+
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+            }
         }
 
     }

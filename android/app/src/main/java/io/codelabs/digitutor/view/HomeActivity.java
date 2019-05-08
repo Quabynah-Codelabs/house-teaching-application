@@ -2,6 +2,7 @@ package io.codelabs.digitutor.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,7 +83,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void setupHeaderView() {
         // Get live data from database
-        if (prefs.getType() != null){
+        if (prefs.getType() != null) {
             getUser();
         }
     }
@@ -119,14 +120,18 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             hashMap.put("updatedAt", System.currentTimeMillis());
 
             // Send data to the database server
-            FirebaseFirestore.getInstance().collection(type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS)
-                    .document(instance.getKey())
-                    .update(hashMap)
-                    .addOnCompleteListener(task -> {
-                        ExtensionUtils.debugLog(getApplicationContext(), "Token updated");
-                    }).addOnFailureListener(e -> {
+            try {
+                FirebaseFirestore.getInstance().collection(type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS)
+                        .document(instance.getKey())
+                        .update(hashMap)
+                        .addOnCompleteListener(task -> {
+                            ExtensionUtils.debugLog(getApplicationContext(), "Token updated");
+                        }).addOnFailureListener(e -> {
+                    ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
+                });
+            } catch (Exception e) {
                 ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
-            });
+            }
         }
     }
 
@@ -147,7 +152,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         username.setText(prefs.getKey());
         type.setText(String.format("Logged in as: %s", prefs.getType()));
 
-        FirebaseDataSource.getCurrentUser(this, firestore, prefs, new AsyncCallback<BaseUser>() {
+        // Get user information after some delay. this is to help resolve the issue of not finding the user's key in time
+        new Handler().postDelayed(() -> FirebaseDataSource.getCurrentUser(this, firestore, prefs, new AsyncCallback<BaseUser>() {
             @Override
             public void onError(@Nullable String error) {
                 ExtensionUtils.toast(HomeActivity.this, error, true);
@@ -185,7 +191,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             public void onComplete() {
 
             }
-        });
+        }), 1500);
     }
 
     @Override
