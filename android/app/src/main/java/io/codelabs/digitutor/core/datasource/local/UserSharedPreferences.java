@@ -34,13 +34,13 @@ public class UserSharedPreferences {
 
         // Get fields
         key = prefs.getString(Constants.USER_KEY, null);
-        type = prefs.getString(Constants.USER_TYPE, BaseUser.Type.PARENT);
+        type = prefs.getString(Constants.USER_TYPE, null);
 
         isLoggedIn = key != null && !TextUtils.isEmpty(key);
 
         if (isLoggedIn) {
             key = prefs.getString(Constants.USER_KEY, null);
-            type = prefs.getString(Constants.USER_TYPE, BaseUser.Type.PARENT);
+            type = prefs.getString(Constants.USER_TYPE, null);
         }
     }
 

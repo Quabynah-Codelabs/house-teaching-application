@@ -9,6 +9,7 @@
     </data>
     <FrameLayout android:layout_width="match_parent"
                  android:layout_height="match_parent"
+                 android:focusableInTouchMode="true"
                  tools:context=".view.kotlin.AssignmentActivity"
                  android:id="@+id/container">
 
@@ -107,7 +108,7 @@
                                                        android:layout_height="wrap_content"
                                                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                                        tools:listitem="@layout/item_user"
-                                                       tools:itemCount="2"
+                                                       tools:itemCount="20"
                                                        android:visibility="@{showList ? View.VISIBLE : View.GONE}"
                                                        android:scrollbars="none"
                                                        android:id="@+id/wards_grid"/>

@@ -13,7 +13,6 @@ import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
-
 import io.codelabs.digitutor.R
 import io.codelabs.digitutor.core.base.BaseActivity
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource
@@ -31,9 +30,6 @@ import io.codelabs.recyclerview.SlideInItemAnimator
 import io.codelabs.sdk.util.debugLog
 import io.codelabs.sdk.util.toast
 import io.codelabs.util.ImeUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
@@ -43,9 +39,9 @@ class SearchActivity : BaseActivity(), OnClickListener<BaseDataModel> {
 
     // Get the data binding class
     private lateinit var binding: ActivitySearchBinding
-    private val job: Job = Job()
-    private val ioScope = CoroutineScope(job + Dispatchers.IO)
-    private val uiScope = CoroutineScope(job + Dispatchers.Main)
+//    private val job: Job = Job()
+//    val ioScope = CoroutineScope(job + Dispatchers.IO)
+//    private val uiScope = CoroutineScope(job + Dispatchers.Main)
 
     private lateinit var adapter: SearchAdapter
 
@@ -58,7 +54,13 @@ class SearchActivity : BaseActivity(), OnClickListener<BaseDataModel> {
         adapter = SearchAdapter(this, this)
         binding.searchResults.adapter = adapter
         binding.searchResults.layoutManager = LinearLayoutManager(this)
-        binding.searchResults.addItemDecoration(GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider))
+        binding.searchResults.addItemDecoration(
+            GridItemDividerDecoration(
+                this,
+                R.dimen.divider_height,
+                R.color.divider
+            )
+        )
         binding.searchResults.itemAnimator = SlideInItemAnimator()
         binding.searchResults.setHasFixedSize(true)
         setupSearchView()
@@ -70,7 +72,8 @@ class SearchActivity : BaseActivity(), OnClickListener<BaseDataModel> {
 
         binding.searchView.queryHint = getString(R.string.search_hint)
         binding.searchView.inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        binding.searchView.imeOptions = binding.searchView.imeOptions or EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
+        binding.searchView.imeOptions =
+            binding.searchView.imeOptions or EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchFor(query)
@@ -114,11 +117,6 @@ class SearchActivity : BaseActivity(), OnClickListener<BaseDataModel> {
                 override fun onComplete() {}
             })
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 
     override fun onNewIntent(intent: Intent?) {

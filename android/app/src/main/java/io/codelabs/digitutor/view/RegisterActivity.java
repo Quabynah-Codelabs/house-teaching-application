@@ -4,13 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.transition.TransitionManager;
-
-import java.util.Objects;
-
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
@@ -21,6 +17,8 @@ import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.databinding.ActivityRegisterBinding;
 import io.codelabs.sdk.glide.GlideApp;
 import io.codelabs.sdk.util.ExtensionUtils;
+
+import java.util.Objects;
 
 public class RegisterActivity extends BaseActivity {
     public static final String EXTRA_USER_TYPE = "EXTRA_USER_TYPE";
@@ -77,8 +75,9 @@ public class RegisterActivity extends BaseActivity {
                 @Override
                 public void onSuccess(@Nullable String response) {
                     // Create new user with profile information added
-                    FirebaseDataSource.createUser(RegisterActivity.this, auth, firestore, new LoginCredentials(email, password),
-                            getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT, username, new AsyncCallback<Void>() {
+                    String type = getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT;
+                    FirebaseDataSource.createUser(RegisterActivity.this, auth, firestore, new LoginCredentials(email, password, type),
+                            type, username, new AsyncCallback<Void>() {
                                 @Override
                                 public void onError(@Nullable String error) {
                                     ExtensionUtils.toast(RegisterActivity.this, error, true);
@@ -156,7 +155,7 @@ public class RegisterActivity extends BaseActivity {
                 }
             });
         } else {
-            FirebaseDataSource.createUser(this, auth, firestore, new LoginCredentials(email, password),
+            FirebaseDataSource.createUser(this, auth, firestore, new LoginCredentials(email, password, getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT),
                     getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT, username,
                     new AsyncCallback<Void>() {
                         @Override

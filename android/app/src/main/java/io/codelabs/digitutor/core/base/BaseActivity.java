@@ -19,7 +19,7 @@ import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 /**
  * Base class for all {@link android.app.Activity}s
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends io.codelabs.sdk.view.BaseActivity {
     // Get instance of the user's shared preferences
     public UserSharedPreferences prefs;
     public FirebaseAuth auth = FirebaseAuth.getInstance();

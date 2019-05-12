@@ -51,7 +51,7 @@ public class LoginActivity extends BaseActivity {
         String password = Objects.requireNonNull(binding.password.getText()).toString();
 
         FirebaseDataSource.login(this, auth,
-                new LoginCredentials(email, password), new AsyncCallback<Void>() {
+                new LoginCredentials(email, password, type), new AsyncCallback<Void>() {
                     @Override
                     public void onError(@Nullable String error) {
                         ExtensionUtils.toast(LoginActivity.this, error, true);

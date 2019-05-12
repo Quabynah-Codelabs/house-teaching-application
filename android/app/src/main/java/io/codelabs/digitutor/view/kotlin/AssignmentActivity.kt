@@ -28,6 +28,9 @@ import io.codelabs.recyclerview.GridItemDividerDecoration
 import io.codelabs.recyclerview.SlideInItemAnimator
 import io.codelabs.sdk.util.debugLog
 import io.codelabs.sdk.util.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Assignments screen
@@ -49,7 +52,7 @@ class AssignmentActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_assignment)
         setSupportActionBar(binding.toolbar)
-        binding.toolbar.setNavigationOnClickListener { v -> onBackPressed() }
+        binding.toolbar.setNavigationOnClickListener { onBackPressed() }
         binding.showList = true
         setupTutor()
         setupClients()
@@ -63,7 +66,7 @@ class AssignmentActivity : BaseActivity() {
             }
         }
         binding.wardsGrid.layoutManager = LinearLayoutManager(this)
-        binding.wardsGrid.itemAnimator = SlideInItemAnimator() as RecyclerView.ItemAnimator?
+        binding.wardsGrid.itemAnimator = SlideInItemAnimator()
         binding.wardsGrid.addItemDecoration(GridItemDividerDecoration(this, R.dimen.divider_height, R.color.divider))
         binding.wardsGrid.adapter = adapter
         binding.wardsGrid.setHasFixedSize(true)
@@ -130,8 +133,8 @@ class AssignmentActivity : BaseActivity() {
 
                     if (InputValidator.hasValidInput(binding.comments.text.toString())) {
                         if (startDate != null && endDate != null) {
-                            post(subject)
                             debugLog("Start: $startDate. End: $endDate. Subject: ${subject.key}. Ward: $ward")
+                            post(subject)
                         } else {
                             MaterialDialog(this@AssignmentActivity).show {
                                 title(text = "Set Start Date...")
@@ -157,33 +160,34 @@ class AssignmentActivity : BaseActivity() {
     }
 
     private fun post(subject: Subject) {
-        FirebaseDataSource.sendAssignment(firestore,
-            storage,
-            prefs,
-            binding.comments.text.toString(),
-            filePath.toString(),
-            ward,
-            subject.key,
-            startDate!!,
-            endDate!!,
-            object : AsyncCallback<Void?> {
-                override fun onSuccess(response: Void?) {
-                    toast("Assignment uploaded successfully")
-                }
+        ioScope.launch {
+            FirebaseDataSource.sendAssignment(firestore,
+                storage,
+                prefs,
+                binding.comments.text.toString(),
+                filePath.toString(),
+                ward,
+                subject.key,
+                startDate!!,
+                endDate!!,
+                object : AsyncCallback<Void?> {
+                    override fun onSuccess(response: Void?) {
+                        debugLog("Assignment uploaded successfully")
+                    }
 
-                override fun onComplete() {
+                    override fun onComplete() {
 
-                }
+                    }
 
-                override fun onError(error: String?) {
-                    toast(error, true)
-                }
+                    override fun onError(error: String?) {
+                        debugLog(error)
+                    }
 
-                override fun onStart() {
-                    debugLog("Sending assignment to ward")
-                    toast("Sending assignment to ward", true)
-                }
-            })
+                    override fun onStart() {
+                        debugLog("Sending assignment to ward")
+                    }
+                })
+        }
         finishAfterTransition()
     }
 

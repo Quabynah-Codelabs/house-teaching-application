@@ -6,11 +6,20 @@ import android.util.Patterns;
  * Login credentials class
  */
 public class LoginCredentials {
-    private String email, password;
+    private String email, password, type;
 
-    public LoginCredentials(String email, String password) {
+    public LoginCredentials(String email, String password, String type) {
         this.email = email;
         this.password = password;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     String getEmail() {
