@@ -694,9 +694,9 @@ public final class FirebaseDataSource {
                         return;
                     }
 
-
                     DocumentReference document = firestore.collection(String.format(Constants.ASSIGNMENTS, prefs.getKey())).document();
                     Assignment assignment = new Assignment(document.getId(), ward, comment, response, subject, startDate, endDate);
+                    ExtensionUtils.debugLog("Assignment sent as: ",assignment);
                     document.set(assignment).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             callback.onSuccess(null);
