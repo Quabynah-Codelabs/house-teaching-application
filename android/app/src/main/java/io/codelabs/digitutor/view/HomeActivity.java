@@ -39,6 +39,7 @@ import io.codelabs.digitutor.view.fragment.SchedulesFragment;
 import io.codelabs.digitutor.view.fragment.TimeTableFragment;
 import io.codelabs.digitutor.view.fragment.TutorsFragment;
 import io.codelabs.digitutor.view.kotlin.AddSubjectActivity;
+import io.codelabs.digitutor.view.kotlin.AssignmentActivity;
 import io.codelabs.digitutor.view.kotlin.SearchActivity;
 import io.codelabs.sdk.glide.GlideApp;
 import io.codelabs.sdk.util.ExtensionUtils;

@@ -5,11 +5,14 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Assignment(
-        override var key: String,
-        val ward: String,
-        val subject: String,
-        val dateGiven: Long,
-        val dateDue: Long
+    override var key: String,
+    val ward: String,
+    var comment: String,
+    var filePath: String,
+    val subject: String,
+    val dateGiven: Long,
+    val dateDue: Long
 ) : BaseDataModel {
-    constructor() : this("", "", "", 0L, 0L)
+
+    constructor() : this("", "", "", "", "", 0L, 0L)
 }

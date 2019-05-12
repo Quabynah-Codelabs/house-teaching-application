@@ -70,7 +70,7 @@ public final class FirebaseDataSource {
         }
     }
 
-    public static void resetPassword(Activity host, FirebaseAuth auth, String email, AsyncCallback<Void> callback) {
+    public static void resetPassword(Activity host, FirebaseAuth auth, String email, @NotNull AsyncCallback<Void> callback) {
         callback.onStart();
         if (email != null && !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             auth.sendPasswordResetEmail(email).addOnCompleteListener(host, task -> {
@@ -92,7 +92,7 @@ public final class FirebaseDataSource {
         callback.onComplete();
     }
 
-    public static void uploadImage(StorageReference storage, Uri uri, AsyncCallback<String> callback) {
+    public static void uploadImage(@NotNull StorageReference storage, Uri uri, @NotNull AsyncCallback<String> callback) {
         callback.onStart();
 
         final StorageReference ref = storage.child(System.currentTimeMillis() + ".jpg");
@@ -116,7 +116,32 @@ public final class FirebaseDataSource {
                 callback.onComplete();
             }
         });
+    }
 
+    public static void uploadFile(@NotNull StorageReference storage, Uri uri, @NotNull AsyncCallback<String> callback) {
+        callback.onStart();
+
+        final StorageReference ref = storage.child(uri.getLastPathSegment() + "" + System.currentTimeMillis());
+        UploadTask uploadTask = ref.putFile(uri);
+
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                callback.onComplete();
+            }
+
+            // Continue with the task to get the download URL
+            return ref.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                callback.onSuccess(downloadUri != null ? downloadUri.toString() : null);
+                callback.onComplete();
+            } else {
+                callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                callback.onComplete();
+            }
+        });
     }
 
     public static void updateUserAvatar(Activity host, FirebaseFirestore firestore, String type, String key, String avatar, AsyncCallback<Void> callback) {
@@ -511,7 +536,8 @@ public final class FirebaseDataSource {
                             DocumentReference document = firestore.collection(String.format(Constants.WARDS, prefs.getKey())).document();
 
                             // Create new Ward
-                            Ward ward = new Ward(Objects.requireNonNull(parent).getEmail(), credentials.getName(), credentials.getAvatar(), document.getId(), parent.getToken(), BaseUser.Type.WARD);
+                            Ward ward = new Ward(Objects.requireNonNull(parent).getEmail(), credentials.getName(), credentials.getAvatar(),
+                                    document.getId(), parent.getToken(), credentials.getName(), BaseUser.Type.WARD);
 
                             // Push data to database
                             document.set(ward).addOnCompleteListener(task1 -> {
@@ -600,7 +626,8 @@ public final class FirebaseDataSource {
     }
 
     public static void toggleTutorRequest(FirebaseFirestore firestore,
-                                          UserSharedPreferences prefs, Parent parent,
+                                          UserSharedPreferences prefs,
+                                          Parent parent,
                                           boolean state,
                                           String requestId, AsyncCallback<Void> callback) {
         callback.onStart();
@@ -623,7 +650,7 @@ public final class FirebaseDataSource {
                         callback.onComplete();
                     }
                 });
-            } else  {
+            } else {
                 firestore.collection(Constants.REQUESTS).document(requestId).delete()
                         .addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) callback.onSuccess(null);
@@ -635,5 +662,146 @@ public final class FirebaseDataSource {
             callback.onError("Unable to add parent to your clients");
             callback.onComplete();
         }
+    }
+
+    /**
+     * Add new {@link Assignment}
+     */
+    public static void sendAssignment(FirebaseFirestore firestore,
+                                      StorageReference storage,
+                                      @NotNull UserSharedPreferences prefs,
+                                      String comment,
+                                      String filePath,
+                                      String ward,
+                                      String subject,
+                                      long startDate,
+                                      long endDate,
+                                      @NotNull AsyncCallback<Void> callback) {
+        callback.onStart();
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            uploadFile(storage, Uri.parse(filePath), new AsyncCallback<String>() {
+                @Override
+                public void onError(@Nullable String error) {
+                    callback.onError(error);
+                    callback.onComplete();
+                }
+
+                @Override
+                public void onSuccess(@Nullable String response) {
+                    if (response == null) {
+                        callback.onError("Could not upload assignment file");
+                        callback.onComplete();
+                        return;
+                    }
+
+
+                    DocumentReference document = firestore.collection(String.format(Constants.ASSIGNMENTS, prefs.getKey())).document();
+                    Assignment assignment = new Assignment(document.getId(), ward, comment, response, subject, startDate, endDate);
+                    document.set(assignment).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            callback.onSuccess(null);
+
+                        } else {
+                            callback.onError("Unable to upload assignment.\n" + Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                        }
+                        callback.onComplete();
+                    }).addOnFailureListener(e -> {
+                        callback.onError(e.getLocalizedMessage());
+                        callback.onComplete();
+                    });
+                }
+
+                @Override
+                public void onStart() {
+                    callback.onStart();
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
+        } else {
+            callback.onError("Please sign in as a tutor first");
+            callback.onComplete();
+        }
+    }
+
+    /**
+     * Get a list of all {@linkplain Assignment}s uploaded by this {@link Tutor}
+     */
+    public static void getAllAssignments(Activity host,
+                                         FirebaseFirestore firestore,
+                                         @NotNull UserSharedPreferences prefs,
+                                         @Nullable String subject,
+                                         @NotNull AsyncCallback<List<Assignment>> callback) {
+        callback.onStart();
+
+        if (!prefs.isLoggedIn() || !prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            callback.onError("Please sign in as a tutor first");
+            callback.onComplete();
+            return;
+        }
+
+        Query query;
+        if (subject == null) {
+            query = firestore.collection(String.format(Constants.ASSIGNMENTS, prefs.getKey()));
+        } else
+            query = firestore.collection(String.format(Constants.ASSIGNMENTS, prefs.getKey())).whereEqualTo("subject", subject);
+
+        // Attach a live listener
+        query.addSnapshotListener(host, (queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+                return;
+            }
+
+            if (queryDocumentSnapshots != null) {
+                callback.onSuccess(queryDocumentSnapshots.toObjects(Assignment.class));
+            } else callback.onError("Could not get assignments for this tutor and subject");
+            callback.onComplete();
+
+        });
+    }
+
+
+    /**
+     * Get a list of all {@linkplain Assignment}s uploaded by this {@link Tutor}
+     */
+    public static void getAllStudents(Activity host,
+                                      FirebaseFirestore firestore,
+                                      @NotNull UserSharedPreferences prefs,
+                                      @Nullable String subject,
+                                      @NotNull AsyncCallback<List<Student>> callback) {
+        callback.onStart();
+
+        if (!prefs.isLoggedIn() || !prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            callback.onError("Please sign in as a tutor first");
+            callback.onComplete();
+            return;
+        }
+
+        Query query;
+        if (subject == null) {
+            query = firestore.collection(String.format(Constants.STUDENTS, prefs.getKey()));
+        } else
+            query = firestore.collection(String.format(Constants.STUDENTS, prefs.getKey())).whereEqualTo("subject", subject);
+
+        // Attach a live listener
+        query.addSnapshotListener(host, (queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+                return;
+            }
+
+            if (queryDocumentSnapshots != null) {
+                callback.onSuccess(queryDocumentSnapshots.toObjects(Student.class));
+            } else callback.onError("Could not get assignments for this tutor and subject");
+            callback.onComplete();
+
+        });
     }
 }
