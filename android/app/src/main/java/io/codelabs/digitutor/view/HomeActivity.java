@@ -226,7 +226,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 intentTo(AddSubjectActivity.class);
                 break;
             case R.id.menu_make_complaints:
-                intentTo(ComplaintActivity.class);
+                //intentTo(ComplaintActivity.class);
+
                 break;
         }
         return super.onOptionsItemSelected(item);

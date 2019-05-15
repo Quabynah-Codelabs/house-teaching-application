@@ -46,6 +46,7 @@ public class ComplaintsFragment extends Fragment {
         adapter = new ComplaintsAdapter(((BaseActivity) requireActivity()), (complaint, isLongClick) -> {
             Intent intent = new Intent(getContext(), ComplaintActivity.class);
             intent.putExtra(ComplaintActivity.EXTRA_COMPLAINT, complaint);
+            intent.putExtra(ComplaintActivity.EXTRA_COMPLAINT_STATE, false);
             startActivity(intent);
         });
         binding.grid.setAdapter(adapter);

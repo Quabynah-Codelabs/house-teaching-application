@@ -833,4 +833,33 @@ public final class FirebaseDataSource {
         }
 
     }
+
+    public static void postComplaint(@NotNull BaseActivity host, String parent, String tutor, String description, @NotNull AsyncCallback<Void> callback) {
+        callback.onStart();
+        FirebaseFirestore firestore = host.firestore;
+        UserSharedPreferences prefs = host.prefs;
+
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.PARENT)) {
+            DocumentReference document = firestore.collection(Constants.COMPLAINTS).document();
+            Complaint complaint = new Complaint(document.getId(), parent, tutor, description, System.currentTimeMillis());
+
+            document.set(complaint)
+                    .addOnCompleteListener(host, task -> {
+                        if (task.isSuccessful()) {
+                            callback.onSuccess(null);
+                            callback.onComplete();
+                        } else {
+                            callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                            callback.onComplete();
+                        }
+                    }).addOnFailureListener(host, e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("Please sign in as a parent first");
+            callback.onComplete();
+        }
+
+    }
 }
