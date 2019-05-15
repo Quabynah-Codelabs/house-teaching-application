@@ -70,6 +70,7 @@
         <activity
             android:name=".view.RequestDetailsActivity"
             android:configChanges="orientation|screenLayout|screenSize" />
+        <activity android:name=".view.ComplaintActivity"/>
 
         <service
             android:name=".core.notification.AppMessagingService"

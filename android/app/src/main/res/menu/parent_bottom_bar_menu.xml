@@ -9,8 +9,9 @@
 
 
     <item
-        android:title="Complaints"
+        android:title="Make Complaints"
         app:showAsAction="never"
+        android:id="@+id/menu_make_complaints"
         android:icon="@drawable/twotone_book_24px" />
 
     <item

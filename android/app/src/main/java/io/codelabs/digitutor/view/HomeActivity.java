@@ -8,22 +8,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
-
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import java.util.HashMap;
-
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
@@ -32,18 +27,15 @@ import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
 import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.databinding.ActivityHomeBinding;
-import io.codelabs.digitutor.view.fragment.ClientsFragment;
-import io.codelabs.digitutor.view.fragment.FeedbackFragment;
-import io.codelabs.digitutor.view.fragment.RequestsFragment;
-import io.codelabs.digitutor.view.fragment.SchedulesFragment;
-import io.codelabs.digitutor.view.fragment.TimeTableFragment;
-import io.codelabs.digitutor.view.fragment.TutorsFragment;
+import io.codelabs.digitutor.view.fragment.*;
 import io.codelabs.digitutor.view.kotlin.AddSubjectActivity;
 import io.codelabs.digitutor.view.kotlin.AssignmentActivity;
 import io.codelabs.digitutor.view.kotlin.SearchActivity;
 import io.codelabs.sdk.glide.GlideApp;
 import io.codelabs.sdk.util.ExtensionUtils;
 import io.codelabs.widget.CircularImageView;
+
+import java.util.HashMap;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -227,8 +219,14 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.menu_view_timetable:
                 addFragment(new TimeTableFragment());
                 break;
+            case R.id.menu_complaints:
+                addFragment(new ComplaintsFragment());
+                break;
             case R.id.menu_subjects:
                 intentTo(AddSubjectActivity.class);
+                break;
+            case R.id.menu_make_complaints:
+                intentTo(ComplaintActivity.class);
                 break;
         }
         return super.onOptionsItemSelected(item);

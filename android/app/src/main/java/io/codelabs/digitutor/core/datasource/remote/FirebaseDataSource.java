@@ -17,6 +17,7 @@ import com.google.firebase.firestore.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
@@ -696,7 +697,7 @@ public final class FirebaseDataSource {
 
                     DocumentReference document = firestore.collection(String.format(Constants.ASSIGNMENTS, prefs.getKey())).document();
                     Assignment assignment = new Assignment(document.getId(), ward, comment, response, subject, startDate, endDate);
-                    ExtensionUtils.debugLog("Assignment sent as: ",assignment);
+                    ExtensionUtils.debugLog("Assignment sent as: ", assignment);
                     document.set(assignment).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             callback.onSuccess(null);
@@ -803,5 +804,33 @@ public final class FirebaseDataSource {
             callback.onComplete();
 
         });
+    }
+
+    public static void getComplaints(@NotNull BaseActivity host, @NotNull AsyncCallback<List<Complaint>> callback) {
+        callback.onStart();
+        FirebaseFirestore firestore = host.firestore;
+        UserSharedPreferences prefs = host.prefs;
+
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            firestore.collection(Constants.COMPLAINTS).whereEqualTo("tutor", prefs.getKey())
+                    .get()
+                    .addOnCompleteListener(host, task -> {
+                        if (task.isSuccessful()) {
+                            List<Complaint> complaints = Objects.requireNonNull(task.getResult()).toObjects(Complaint.class);
+                            callback.onSuccess(complaints);
+                            callback.onComplete();
+                        } else {
+                            callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                            callback.onComplete();
+                        }
+                    }).addOnFailureListener(host, e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("Please sign in as a tutor first");
+            callback.onComplete();
+        }
+
     }
 }
