@@ -214,7 +214,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 addFragment(new FeedbackFragment());
                 break;
             case R.id.menu_view_schedule:
-                addFragment(new SchedulesFragment());
+                intentTo(SchedulesActivity.class);
                 break;
             case R.id.menu_view_timetable:
                 addFragment(new TimeTableFragment());

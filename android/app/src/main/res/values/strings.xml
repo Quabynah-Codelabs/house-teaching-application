@@ -38,4 +38,5 @@
     <string name="refresh">Refresh</string>
     <string name="complaints">Complaints</string>
     <string name="complaint_header">Showing details for...</string>
+    <string name="schedules">Schedules</string>
 </resources>
