@@ -119,7 +119,7 @@ public final class FirebaseDataSource {
         });
     }
 
-    public static void uploadFile(@NotNull StorageReference storage, Uri uri, @NotNull AsyncCallback<String> callback) {
+    private static void uploadFile(@NotNull StorageReference storage, @NotNull Uri uri, @NotNull AsyncCallback<String> callback) {
         callback.onStart();
 
         final StorageReference ref = storage.child(uri.getLastPathSegment() + "" + System.currentTimeMillis());
@@ -145,7 +145,7 @@ public final class FirebaseDataSource {
         });
     }
 
-    public static void updateUserAvatar(Activity host, FirebaseFirestore firestore, String type, String key, String avatar, AsyncCallback<Void> callback) {
+    public static void updateUserAvatar(Activity host, @NotNull FirebaseFirestore firestore, @NotNull String type, String key, String avatar, @NotNull AsyncCallback<Void> callback) {
         callback.onStart();
         String collection = type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS;
 
@@ -338,7 +338,7 @@ public final class FirebaseDataSource {
         });
     }
 
-    public static void searchFor(/*Activity host,*/ FirebaseFirestore firestore, String query, @NotNull AsyncCallback<List<? extends BaseDataModel>> callback) {
+    public static void searchFor(FirebaseFirestore firestore, String query, @NotNull AsyncCallback<List<? extends BaseDataModel>> callback) {
         callback.onStart();
         if (InputValidator.INSTANCE.hasValidInput(query)) {
             // Get all subjects
