@@ -300,6 +300,48 @@ public final class FirebaseDataSource {
                 });
     }
 
+    public static void fetchAllFeedbacks(Activity host, @NotNull FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @NotNull AsyncCallback<List<Feedback>> callback) {
+        callback.onStart();
+        firestore.collection(Constants.FEEDBACK)
+                .whereEqualTo("parent", prefs.getKey())
+                .addSnapshotListener(host, (queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        callback.onError(e.getLocalizedMessage());
+                        callback.onComplete();
+                        return;
+                    }
+
+                    if (queryDocumentSnapshots != null) {
+                        List<Feedback> subjects = queryDocumentSnapshots.toObjects(Feedback.class);
+                        callback.onSuccess(subjects);
+                    } else {
+                        callback.onError("Unable to load subjects");
+                    }
+                    callback.onComplete();
+                });
+    }
+
+    public static void fetchAllSchedules(Activity host, @NotNull FirebaseFirestore firestore, String tutor, @NotNull AsyncCallback<List<Schedule>> callback) {
+        callback.onStart();
+        firestore.collection(Constants.SCHEDULES)
+                .whereEqualTo("tutor", tutor)
+                .addSnapshotListener(host, (queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        callback.onError(e.getLocalizedMessage());
+                        callback.onComplete();
+                        return;
+                    }
+
+                    if (queryDocumentSnapshots != null) {
+                        List<Schedule> schedules = queryDocumentSnapshots.toObjects(Schedule.class);
+                        callback.onSuccess(schedules);
+                    } else {
+                        callback.onError("Unable to load subjects");
+                    }
+                    callback.onComplete();
+                });
+    }
+
     public static void getAllClients(Activity host, @NotNull FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, @NotNull AsyncCallback<List<Parent>> callback) {
         callback.onStart();
         firestore.collection(String.format(Constants.CLIENTS, prefs.getKey())).orderBy("name", Query.Direction.DESCENDING)
@@ -582,6 +624,34 @@ public final class FirebaseDataSource {
 
             // Push data to database
             document.set(subject).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    callback.onSuccess(null);
+                    callback.onComplete();
+                } else {
+                    callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                    callback.onComplete();
+                }
+            }).addOnFailureListener(e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+
+
+        } else {
+            callback.onError("Please login as a parent first to proceed");
+            callback.onComplete();
+        }
+    }
+
+    public static void sendFeedback(FirebaseFirestore firestore, @NotNull UserSharedPreferences prefs, Feedback feedback, @NotNull AsyncCallback<Void> callback) {
+        callback.onStart();
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            // Create a new document reference for the ward. We use the subject's key to avoid duplication of entries
+            DocumentReference document = firestore.collection(Constants.FEEDBACK).document();
+            feedback.setKey(document.getId());
+
+            // Push data to database
+            document.set(feedback).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     callback.onSuccess(null);
                     callback.onComplete();

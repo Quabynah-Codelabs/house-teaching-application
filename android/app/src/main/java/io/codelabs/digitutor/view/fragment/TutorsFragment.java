@@ -4,17 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.TransitionManager;
-
-import java.util.List;
-import java.util.Objects;
-
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
@@ -26,6 +21,9 @@ import io.codelabs.digitutor.view.adapter.UsersAdapter;
 import io.codelabs.recyclerview.GridItemDividerDecoration;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 public class TutorsFragment extends Fragment {
     private FragmentWithListBinding binding;
@@ -71,14 +69,12 @@ public class TutorsFragment extends Fragment {
                             TransitionManager.beginDelayedTransition(binding.fragmentContainer);
                             binding.grid.setVisibility(View.VISIBLE);
                             binding.loading.setVisibility(View.GONE);
-                            ExtensionUtils.toast(requireContext(), error, true);
                         }
 
                         @Override
                         public void onSuccess(@Nullable List<Tutor> response) {
                             if (response != null) {
                                 adapter.addData(response);
-                                ExtensionUtils.debugLog(requireContext(), response);
                             }
                         }
 

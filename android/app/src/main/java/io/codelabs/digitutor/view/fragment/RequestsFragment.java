@@ -71,7 +71,6 @@ public class RequestsFragment extends Fragment {
                             TransitionManager.beginDelayedTransition(binding.fragmentContainer);
                             binding.grid.setVisibility(View.VISIBLE);
                             binding.loading.setVisibility(View.GONE);
-                            ExtensionUtils.toast(requireActivity().getApplicationContext(), error, true);
                         }
 
                         @Override
