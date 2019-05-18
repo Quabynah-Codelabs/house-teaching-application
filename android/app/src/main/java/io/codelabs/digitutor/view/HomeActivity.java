@@ -72,6 +72,9 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 intentTo(AssignmentActivity.class);
             });
         }
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        sendRegistrationToServer(token);
     }
 
     private void setupHeaderView() {
@@ -83,7 +86,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onEnterAnimationComplete() {
-        try {
+        /*try {
             // Now compare the old token with the new one and send information to the database server
             FirebaseInstanceId.getInstance().getInstanceId()
                     .addOnCompleteListener(task -> {
@@ -99,13 +102,15 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                     });
         } catch (Exception e) {
             ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
-        }
+
+        }*/
+
     }
 
     private void sendRegistrationToServer(String token) {
-        UserSharedPreferences instance = UserSharedPreferences.getInstance(this);
-        if (instance.isLoggedIn()) {
-            String type = instance.getType();
+        if (prefs.isLoggedIn()) {
+            String type = prefs.getType();
+            ExtensionUtils.debugLog(this, token);
 
             // Create a map of the new token and time updated
             HashMap<String, Object> hashMap = new HashMap<>(0);
@@ -114,8 +119,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
             // Send data to the database server
             try {
-                FirebaseFirestore.getInstance().collection(type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS)
-                        .document(instance.getKey())
+                firestore.collection(type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS)
+                        .document(prefs.getKey())
                         .update(hashMap)
                         .addOnCompleteListener(task -> {
                             ExtensionUtils.debugLog(getApplicationContext(), "Token updated");
@@ -196,7 +201,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(prefs.getType().equals(BaseUser.Type.PARENT) ? R.menu.parent_bottom_bar_menu : R.menu.tutor_bottom_bar_menu, menu);
+        getMenuInflater().inflate(prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.PARENT) ? R.menu.parent_bottom_bar_menu : R.menu.tutor_bottom_bar_menu, menu);
         if (menu instanceof MenuBuilder) ((MenuBuilder) menu).setOptionalIconsVisible(true);
         return true;
     }

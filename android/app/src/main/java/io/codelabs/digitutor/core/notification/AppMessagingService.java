@@ -76,7 +76,7 @@ public class AppMessagingService extends FirebaseMessagingService {
 
     private void createNotificationChannel(String channelName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String descriptionText = getString(R.string.channel_description);
+            String descriptionText = "app__description_channel";
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(descriptionText);
 
