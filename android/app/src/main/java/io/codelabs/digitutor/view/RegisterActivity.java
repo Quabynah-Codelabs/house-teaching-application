@@ -3,6 +3,7 @@ package io.codelabs.digitutor.view;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -99,13 +100,18 @@ public class RegisterActivity extends BaseActivity {
 
                                         @Override
                                         public void onSuccess(@Nullable Void response) {
-                                            ExtensionUtils.showConfirmationToast(RegisterActivity.this, response, username, getString(R.string.app_logged_in_as));
-
                                             // Store user locally
                                             prefs.login(auth.getUid(), getIntent().hasExtra(EXTRA_USER_TYPE) ? getIntent().getStringExtra(EXTRA_USER_TYPE) : BaseUser.Type.PARENT);
 
-                                            // Navigate to home screen
-                                            intentTo(HomeActivity.class, true);
+                                            new Handler().postDelayed(() -> {
+                                                TransitionManager.beginDelayedTransition(binding.container);
+                                                binding.loading.setVisibility(View.GONE);
+                                                binding.content.setVisibility(View.VISIBLE);
+
+                                                ExtensionUtils.showConfirmationToast(RegisterActivity.this, response, username, getString(R.string.app_logged_in_as));
+                                                ExtensionUtils.debugLog(getApplicationContext(), "Current User UID: " + auth.getUid());
+                                                intentTo(HomeActivity.class, true);
+                                            }, 2000);
                                         }
 
                                         @Override

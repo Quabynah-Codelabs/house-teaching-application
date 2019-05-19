@@ -7,17 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
-
 import androidx.core.app.NotificationCompat;
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import io.codelabs.digitutor.R;
+import io.codelabs.digitutor.view.HomeActivity;
+import io.codelabs.digitutor.view.RequestDetailsActivity;
+import io.codelabs.digitutor.view.kotlin.AssignmentActivity;
+import io.codelabs.sdk.util.ExtensionUtils;
 
 import java.util.Map;
 import java.util.Objects;
-
-import io.codelabs.digitutor.R;
-import io.codelabs.digitutor.view.RequestDetailsActivity;
 
 /**
  * Send and receive push notifications from the firebase messaging service
@@ -28,7 +28,10 @@ public class AppMessagingService extends FirebaseMessagingService {
     public static final int RC_NOTIFICATION = 133;
     public static final int NOTIFICATION_ICON = R.drawable.shr_logo;
     public static final int NOTIFICATION_ID = (int) System.currentTimeMillis();
+
     public static final String TYPE_REQUEST = "tutor-request";
+    public static final String TYPE_FEEDBACK = "tutor-feedback";
+    public static final String TYPE_ASSIGNMENT = "ward-assignment";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -48,6 +51,21 @@ public class AppMessagingService extends FirebaseMessagingService {
 
                     // Send notification to device
                     pushNotification(data.get("title"), data.get("message"), i);
+                    break;
+
+                case TYPE_FEEDBACK:
+                    Intent feedbackIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                    ExtensionUtils.debugLog(getApplicationContext(), "Feedback received as: " + data.get("key"));
+
+                    // Send notification to device
+                    pushNotification(data.get("title"), data.get("message"), feedbackIntent);
+                    break;
+
+                case TYPE_ASSIGNMENT:
+                    Intent assignmentIntent = new Intent(getApplicationContext(), HomeActivity.class);
+
+                    // Send notification to device
+                    pushNotification(data.get("title"), data.get("message"), assignmentIntent);
                     break;
             }
 

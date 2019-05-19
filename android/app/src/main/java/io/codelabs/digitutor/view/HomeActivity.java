@@ -179,8 +179,12 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.PARENT) ? R.menu.parent_bottom_bar_menu : R.menu.tutor_bottom_bar_menu, menu);
-        if (menu instanceof MenuBuilder) ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        try {
+            getMenuInflater().inflate(prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.PARENT) ? R.menu.parent_bottom_bar_menu : R.menu.tutor_bottom_bar_menu, menu);
+            if (menu instanceof MenuBuilder) ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 

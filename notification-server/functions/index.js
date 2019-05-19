@@ -167,7 +167,7 @@ exports.notifyRequest = functions.firestore.document('requests/{requestId}').onW
                             })
                         } else {
                             return console.log("Unable to get this tutor.", tutor);
-                            
+
                         }
                     }).catch(err => {
                         if (err) {
@@ -183,4 +183,102 @@ exports.notifyRequest = functions.firestore.document('requests/{requestId}').onW
                 return console.log(error);
             }
         })
+});
+
+// 
+exports.wardAssignment = functions.firestore.document('tutors/{tutorId}/assignments/{assignmentId}').onCreate((change, context) => {
+    // Get params from the context
+    var assignmentId = context.params.assignmentId;
+    var tutorId = context.params.tutorId;
+
+    var parent = change.data().ward;
+
+    if (parent) {
+        return admin.firestore().doc(`parents/${parent}`).get().then(snapshot => {
+            if (snapshot.exists) {
+                var parentInfo = snapshot.data();
+
+                // Get the token field
+                var deviceToken = parentInfo.token;
+                if (deviceToken) {
+                    return admin.messaging().sendToDevice(deviceToken, {
+                        data: {
+                            title: `New Assignment`,
+                            message: change.data().comment,
+                            tutor: tutorId,
+                            key: assignmentId,
+                            token: deviceToken,
+                            type: 'ward-assignment'
+                        }
+                    }).then(() => {
+                        return console.log('Notification sent to parent successfully');
+                    }).catch(err => {
+                        if (err) {
+                            return console.log(err.message);
+                        }
+                    })
+                } else {
+                    return console.log(`This parent has no valid device token yet: ${parent}`);
+
+                }
+            } else {
+                return console.log('Could not find the parent with ID: ', parent);
+
+            }
+        }).catch(err => {
+            if (err) {
+                return console.log(err.message);
+            }
+        });
+    } else {
+        return console.log("unable to retreive parent's information");
+    }
+
+});
+
+// Send Feedback from tutor to parent
+exports.sendFeedback = functions.firestore.document('feedback/{key}').onCreate((change, context) => {
+    // Extract the key
+    var key = context.params.key;
+
+    var parent = change.data().parent;
+    console.log(`Parent's UID: ${parent}`);
+
+    // get the parent's device token
+    return admin.firestore().doc(`parents/${parent}`).get().then(snapshot => {
+        if (snapshot.exists) {
+            var parentInfo = snapshot.data();
+
+            // get the token field
+            var deviceToken = parentInfo.token;
+            if (deviceToken) {
+                return admin.messaging().sendToDevice(deviceToken, {
+                    data: {
+                        title: `Feedback on your ward received`,
+                        message: change.data().message,
+                        tutor: change.data().tutor,
+                        key: change.id,
+                        token: deviceToken,
+                        type: 'tutor-feedback'
+                    }
+                }).then(() => {
+                    return console.log('Notification sent to parent successfully');
+                }).catch(err => {
+                    if (err) {
+                        return console.log(err.message);
+                    }
+                })
+            } else {
+                return console.log(`This parent has no valid device token yet: ${parent}`);
+
+            }
+        } else {
+            return console.log('Could not find the parent with ID: ', parent);
+
+        }
+    }).catch(err => {
+        if (err) {
+            return console.log(err.message);
+        }
+    });
 });

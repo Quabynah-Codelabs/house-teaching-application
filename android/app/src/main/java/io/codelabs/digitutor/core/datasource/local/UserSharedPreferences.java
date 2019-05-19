@@ -3,13 +3,10 @@ package io.codelabs.digitutor.core.datasource.local;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-
-import org.jetbrains.annotations.NotNull;
-
 import io.codelabs.digitutor.core.util.Constants;
-import io.codelabs.digitutor.data.BaseUser;
 import kotlin.jvm.Synchronized;
 import kotlin.jvm.Volatile;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Stores user key and type
@@ -71,10 +68,10 @@ public class UserSharedPreferences {
     }
 
     public String getKey() {
-        return key;
+        return prefs.getString(Constants.USER_KEY, null);
     }
 
     public String getType() {
-        return type;
+        return prefs.getString(Constants.USER_TYPE, null);
     }
 }
