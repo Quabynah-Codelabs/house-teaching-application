@@ -1,17 +1,18 @@
 package io.codelabs.digitutor.view.adapter;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.firestore.FirebaseFirestore;
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
-import io.codelabs.digitutor.core.util.Constants;
+import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
+import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.OnClickListener;
 import io.codelabs.digitutor.data.BaseUser;
 import io.codelabs.digitutor.data.model.Parent;
@@ -36,11 +37,11 @@ public class RequestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int TYPE_USER = R.layout.item_user;
 
     private final LayoutInflater inflater;
-    private final Activity context;
+    private final BaseActivity context;
     private final OnClickListener<Request> listener;
     private final FirebaseFirestore firestore;
 
-    public RequestsAdapter(Activity context, OnClickListener<Request> listener, FirebaseFirestore firestore) {
+    public RequestsAdapter(BaseActivity context, OnClickListener<Request> listener, FirebaseFirestore firestore) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.listener = listener;
@@ -76,41 +77,51 @@ public class RequestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void bindUserViewHolder(@NotNull UserViewHolder holder, int position) {
-
         Request request = requests.get(position);
 
-        firestore.collection(Constants.PARENTS).document(request.getParent())
-                .addSnapshotListener(context, (documentSnapshot, e) -> {
-                    if (e != null) {
-                        ExtensionUtils.debugLog(context, e.getLocalizedMessage());
-                        return;
-                    }
+        FirebaseDataSource.getUser(context, context.firestore, request.getParent(), BaseUser.Type.PARENT, new AsyncCallback<BaseUser>() {
+            @Override
+            public void onError(@Nullable String error) {
+                ExtensionUtils.debugLog(context, error);
+            }
 
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
-                        Parent user = documentSnapshot.toObject(Parent.class);
+            @Override
+            public void onSuccess(@Nullable BaseUser response) {
+                ExtensionUtils.debugLog(context, "Request User" + response);
+                if (response != null) {
+                    holder.username.setText(Objects.requireNonNull(response).getName());
+                    holder.info.setText(String.format(Locale.getDefault(), "%d ward(s)", ((Parent) response).getWards().size()));
 
-                        holder.username.setText(Objects.requireNonNull(user).getName());
-                        holder.info.setText(String.format(Locale.getDefault(), "%d ward(s)", user.getWards().size()));
+                    // Load profile image
+                    GlideApp.with(context)
+                            .load(response.getAvatar())
+                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                            .circleCrop()
+                            .priority(Priority.IMMEDIATE)
+                            .placeholder(R.drawable.avatar_placeholder)
+                            .error(R.drawable.ic_player)
+                            .transition(withCrossFade())
+                            .into(holder.avatar);
 
-                        // Load profile image
-                        GlideApp.with(context)
-                                .load(user.getAvatar())
-                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                .circleCrop()
-                                .priority(Priority.IMMEDIATE)
-                                .placeholder(R.drawable.avatar_placeholder)
-                                .error(R.drawable.ic_player)
-                                .transition(withCrossFade())
-                                .into(holder.avatar);
+                    holder.avatar.setOnClickListener(v -> {
+                        Bundle bundle = new Bundle(0);
+                        bundle.putString(UserActivity.EXTRA_USER_TYPE, BaseUser.Type.PARENT);
+                        bundle.putString(UserActivity.EXTRA_USER_UID, request.getParent());
+                        ((BaseActivity) context).intentTo(UserActivity.class, bundle, false);
+                    });
+                }
+            }
 
-                        holder.avatar.setOnClickListener(v -> {
-                            Bundle bundle = new Bundle(0);
-                            bundle.putString(UserActivity.EXTRA_USER_TYPE, BaseUser.Type.PARENT);
-                            bundle.putString(UserActivity.EXTRA_USER_UID, request.getParent());
-                            ((BaseActivity) context).intentTo(UserActivity.class, bundle, false);
-                        });
-                    }
-                });
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
 
         holder.itemView.setOnLongClickListener(v -> {
             listener.onClick(request, true);

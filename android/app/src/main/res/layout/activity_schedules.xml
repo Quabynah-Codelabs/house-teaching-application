@@ -45,16 +45,24 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-        </io.codelabs.widget.ForegroundLinearLayout>
+            <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                       android:layout_height="0dp"
+                                                       android:layout_weight="1"
+                                                       android:id="@+id/schedules_grid"
+                                                       tools:itemCount="20"
+                                                       tools:listitem="@layout/item_schedule"
+                                                       android:scrollbars="none"/>
 
+        </io.codelabs.widget.ForegroundLinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_light"
+                android:src="@drawable/twotone_event_24px"
                 android:id="@+id/fab"
                 android:visibility="@{isTutor ? View.VISIBLE : View.GONE}"
                 android:layout_margin="@dimen/fab_margin"
+                android:onClick="pickSchedule"
                 android:layout_gravity="bottom|end"
                 style="@style/HomeTutorAppTheme.FAB"
                 app:layout_anchor="@id/bottom_app_bar"/>

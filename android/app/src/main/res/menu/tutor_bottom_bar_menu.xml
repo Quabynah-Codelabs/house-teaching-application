@@ -17,7 +17,7 @@
             android:title="Complaints"
             app:showAsAction="never"
             android:id="@+id/menu_complaints"
-            android:icon="@drawable/twotone_book_24px"/>
+            android:icon="@drawable/twotone_inbox_24px"/>
 
     <item
             android:id="@+id/menu_tutor_requests"

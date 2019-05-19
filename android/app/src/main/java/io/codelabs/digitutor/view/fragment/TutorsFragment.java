@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.TransitionManager;
 import io.codelabs.digitutor.R;
@@ -18,7 +19,6 @@ import io.codelabs.digitutor.data.model.Tutor;
 import io.codelabs.digitutor.databinding.FragmentWithListBinding;
 import io.codelabs.digitutor.view.UserActivity;
 import io.codelabs.digitutor.view.adapter.UsersAdapter;
-import io.codelabs.recyclerview.GridItemDividerDecoration;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
 
@@ -51,10 +51,11 @@ public class TutorsFragment extends Fragment {
             }
         });
         binding.grid.setAdapter(adapter);
-        binding.grid.setLayoutManager(new LinearLayoutManager(requireContext()));
+        LinearLayoutManager lm = new LinearLayoutManager(requireContext());
+        binding.grid.setLayoutManager(lm);
         binding.grid.setItemAnimator(new SlideInItemAnimator());
         binding.grid.setHasFixedSize(true);
-        binding.grid.addItemDecoration(new GridItemDividerDecoration(requireContext(), R.dimen.divider_height, R.color.divider));
+        binding.grid.addItemDecoration(new DividerItemDecoration(requireContext(), lm.getOrientation()));
         loadDataFromDatabase();
     }
 

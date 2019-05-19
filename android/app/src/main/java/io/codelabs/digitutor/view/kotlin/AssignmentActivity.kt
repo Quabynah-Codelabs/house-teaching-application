@@ -250,6 +250,7 @@ class AssignmentActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_FILE && resultCode == Activity.RESULT_OK) {
             if (data != null && data.data != null) {
                 filePath = data.data

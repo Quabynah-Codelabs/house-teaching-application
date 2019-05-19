@@ -28,10 +28,7 @@ import io.codelabs.digitutor.data.model.*;
 import io.codelabs.sdk.util.ExtensionUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -690,6 +687,22 @@ public final class FirebaseDataSource {
         }
     }
 
+    public static void getSubject(FirebaseFirestore firestore, String key, AsyncCallback<Subject> callback) {
+        callback.onStart();
+
+        firestore.collection(Constants.SUBJECTS).document(key).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                callback.onSuccess(task.getResult().toObject(Subject.class));
+                callback.onComplete();
+            } else {
+                callback.onError("Unable to get this subject");
+                callback.onComplete();
+            }
+        }).addOnFailureListener(e -> {
+            callback.onError(e.getLocalizedMessage());
+            callback.onComplete();
+        });
+    }
 
     /**
      * Get all Subjects for this Tutor
@@ -857,7 +870,6 @@ public final class FirebaseDataSource {
         });
     }
 
-
     /**
      * Get a list of all {@linkplain Assignment}s uploaded by this {@link Tutor}
      */
@@ -951,5 +963,97 @@ public final class FirebaseDataSource {
             callback.onComplete();
         }
 
+    }
+
+    public static void postSchedule(@NotNull BaseActivity host,
+                                    @NonNull String ward,
+                                    String subject,
+                                    long startDate,
+                                    long endDate,
+                                    @NotNull AsyncCallback<Void> callback) {
+        callback.onStart();
+        FirebaseFirestore firestore = host.firestore;
+        UserSharedPreferences prefs = host.prefs;
+
+        if (prefs.isLoggedIn() && prefs.getType().equals(BaseUser.Type.TUTOR)) {
+            DocumentReference document = firestore.collection(Constants.SCHEDULES).document();
+            Schedule schedule = new Schedule(document.getId(), prefs.getKey(), subject, ward, startDate, endDate, false, new Date());
+
+            document.set(schedule)
+                    .addOnCompleteListener(host, task -> {
+                        if (task.isSuccessful()) {
+                            callback.onSuccess(null);
+                            callback.onComplete();
+                        } else {
+                            callback.onError(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                            callback.onComplete();
+                        }
+                    }).addOnFailureListener(host, e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("Please sign in as a tutor first");
+            callback.onComplete();
+        }
+
+    }
+
+    public static void getTimetableForUser(BaseActivity host, String ward, AsyncCallback<List<Timetable>> callback) {
+        callback.onStart();
+        FirebaseFirestore firestore = host.firestore;
+        UserSharedPreferences prefs = host.prefs;
+
+        if (prefs.getType().equals(BaseUser.Type.PARENT)) {
+            firestore.collection(String.format(Constants.TIMETABLES, prefs.getKey(), ward))
+                    .orderBy("time", Query.Direction.DESCENDING)
+                    .addSnapshotListener(host, (queryDocumentSnapshots, e) -> {
+                        if (e != null) {
+                            callback.onError(e.getLocalizedMessage());
+                            callback.onComplete();
+                            return;
+                        }
+
+                        if (queryDocumentSnapshots != null) {
+                            List<Timetable> timetables = queryDocumentSnapshots.toObjects(Timetable.class);
+                            callback.onSuccess(timetables);
+                            callback.onComplete();
+                        } else {
+                            callback.onError("Unable to get timetables for ward");
+                            callback.onComplete();
+                        }
+
+                    });
+
+        } else {
+            callback.onError("Sign in as a parent first");
+            callback.onComplete();
+        }
+
+    }
+
+    public static void getWard(@NotNull BaseActivity host, String ward, @NotNull AsyncCallback<Ward> callback) {
+        callback.onStart();
+
+        if (host.prefs.getType().equals(BaseUser.Type.PARENT)) {
+            host.firestore.collection(String.format(Constants.WARDS, host.prefs.getKey())).document(ward)
+                    .get()
+                    .addOnCompleteListener(host, task -> {
+                        if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                            Ward parentWard = task.getResult().toObject(Ward.class);
+                            callback.onSuccess(parentWard);
+                            callback.onComplete();
+                        } else {
+                            callback.onError("Unable to fetch ward\'s information");
+                            callback.onComplete();
+                        }
+                    }).addOnFailureListener(host, e -> {
+                callback.onError(e.getLocalizedMessage());
+                callback.onComplete();
+            });
+        } else {
+            callback.onError("Sign in as a parent first");
+            callback.onComplete();
+        }
     }
 }

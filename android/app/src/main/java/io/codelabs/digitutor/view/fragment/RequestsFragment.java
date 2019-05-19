@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.TransitionManager;
 import io.codelabs.digitutor.R;
@@ -44,7 +45,7 @@ public class RequestsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new RequestsAdapter(requireActivity(), (request, isLongClick) -> {
+        adapter = new RequestsAdapter((BaseActivity) requireActivity(), (request, isLongClick) -> {
 
             Bundle bundle = new Bundle(0);
             bundle.putString(RequestDetailsActivity.EXTRA_REQUEST_ID, request.getKey());
@@ -53,10 +54,11 @@ public class RequestsFragment extends Fragment {
 
         }, ((BaseActivity) requireActivity()).firestore);
         binding.grid.setAdapter(adapter);
-        binding.grid.setLayoutManager(new LinearLayoutManager(requireContext()));
+        LinearLayoutManager lm = new LinearLayoutManager(requireContext());
+        binding.grid.setLayoutManager(lm);
         binding.grid.setItemAnimator(new SlideInItemAnimator());
         binding.grid.setHasFixedSize(true);
-        binding.grid.addItemDecoration(new GridItemDividerDecoration(requireContext(), R.dimen.divider_height, R.color.divider));
+        binding.grid.addItemDecoration(new DividerItemDecoration(requireContext(), lm.getOrientation()));
         loadDataFromDatabase();
     }
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="ward" type="io.codelabs.digitutor.data.model.Ward"/>
+
+    </data>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_container">
+
+        <io.codelabs.widget.ForegroundLinearLayout android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    android:background="@color/colorPrimary"
+                    app:title="View timetable"
+                    android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
+                    app:navigationIcon="@drawable/ic_back_light"
+                    app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
+                    android:id="@+id/toolbar"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    android:id="@+id/grid"
+                    android:scrollbarStyle="outsideOverlay"/>
+
+
+        </io.codelabs.widget.ForegroundLinearLayout>
+        <include
+                android:id="@+id/loading"
+                layout="@layout/loading"/>
+
+    </FrameLayout>
+</layout>
