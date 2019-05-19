@@ -37,6 +37,7 @@
     <string name="comments">Comments</string>
     <string name="refresh">Refresh</string>
     <string name="complaints">Complaints</string>
-    <string name="complaint_header">Showing details for...</string>
+    <string name="complaint_header">Showing details for…</string>
     <string name="schedules">Schedules</string>
+    <string name="returnUser">Dismiss</string>
 </resources>

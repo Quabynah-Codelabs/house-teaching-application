@@ -13,7 +13,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.view.HomeActivity;
 import io.codelabs.digitutor.view.RequestDetailsActivity;
-import io.codelabs.digitutor.view.kotlin.AssignmentActivity;
+import io.codelabs.digitutor.view.kotlin.FeedbackActivity;
 import io.codelabs.sdk.util.ExtensionUtils;
 
 import java.util.Map;
@@ -54,8 +54,9 @@ public class AppMessagingService extends FirebaseMessagingService {
                     break;
 
                 case TYPE_FEEDBACK:
-                    Intent feedbackIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                    Intent feedbackIntent = new Intent(getApplicationContext(), FeedbackActivity.class);
                     ExtensionUtils.debugLog(getApplicationContext(), "Feedback received as: " + data.get("key"));
+                    feedbackIntent.putExtra(FeedbackActivity.EXTRA_FEEDBACK_ID, data.get("key"));
 
                     // Send notification to device
                     pushNotification(data.get("title"), data.get("message"), feedbackIntent);

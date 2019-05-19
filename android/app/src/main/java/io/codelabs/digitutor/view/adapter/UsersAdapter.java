@@ -62,15 +62,7 @@ public class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void bindEmptyViewHolder(EmptyViewHolder holder) {
-        // Load GIF file into the image view
-        GlideApp.with(context)
-                .asGif()
-                .load(R.drawable.not_found)
-                .placeholder(R.color.content_placeholder)
-                .error(R.color.content_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .priority(Priority.IMMEDIATE)
-                .into(holder.imageView);
+        holder.shimmer.startShimmer();
     }
 
     private void bindUserViewHolder(UserViewHolder holder, int position) {

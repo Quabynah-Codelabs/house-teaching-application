@@ -72,6 +72,7 @@
             android:configChanges="orientation|screenLayout|screenSize" />
         <activity android:name=".view.ComplaintActivity"/>
         <activity android:name=".view.fragment.SchedulesActivity"/>
+        <activity android:name=".view.kotlin.FeedbackActivity"/>
 
         <service
             android:name=".core.notification.AppMessagingService"

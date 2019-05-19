@@ -54,6 +54,8 @@ public class FeedbackAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_DATA) {
             bindDataViewHolder((FeedbackViewHolder) holder, dataSource.get(position));
+        } else if (getItemViewType(position) == TYPE_EMPTY) {
+            ((EmptyViewHolder) holder).shimmer.startShimmer();
         }
     }
 

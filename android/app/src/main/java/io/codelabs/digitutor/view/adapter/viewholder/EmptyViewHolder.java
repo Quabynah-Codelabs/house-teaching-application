@@ -5,6 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import io.codelabs.digitutor.R;
 import io.codelabs.widget.ForegroundImageView;
 
@@ -12,10 +13,10 @@ import io.codelabs.widget.ForegroundImageView;
  * ViewHolder subclass for showing empty state of a process
  */
 public class EmptyViewHolder extends RecyclerView.ViewHolder {
-    public ForegroundImageView imageView;
+    public ShimmerFrameLayout shimmer;
 
     public EmptyViewHolder(@NonNull View itemView) {
         super(itemView);
-        imageView = itemView.findViewById(R.id.empty_view_image);
+        shimmer = itemView.findViewById(R.id.empty_shimmer);
     }
 }

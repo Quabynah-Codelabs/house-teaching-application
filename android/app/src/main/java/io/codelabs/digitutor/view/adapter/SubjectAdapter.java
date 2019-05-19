@@ -65,15 +65,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private void bindEmptyViewHolder(@NotNull EmptyViewHolder holder) {
-        // Load GIF file into the image view
-        GlideApp.with(context)
-                .asGif()
-                .load(R.drawable.not_found)
-                .placeholder(R.color.content_placeholder)
-                .error(R.color.content_placeholder)
-                .priority(Priority.IMMEDIATE)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(holder.imageView);
+        holder.shimmer.startShimmer();
     }
 
     private void bindSubjectViewHolder(@NotNull SubjectViewHolder holder, int position) {
