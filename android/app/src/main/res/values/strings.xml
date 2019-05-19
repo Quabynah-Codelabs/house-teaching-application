@@ -40,4 +40,8 @@
     <string name="complaint_header">Showing details for…</string>
     <string name="schedules">Schedules</string>
     <string name="returnUser">Dismiss</string>
+    <string name="make_complaint">Make a complaint</string>
+    <string name="complaint_desc">Kindly post a message to this tutor. He / She will get back to you soon. Thank you
+    </string>
+    <string name="send_complaint">Send message</string>
 </resources>

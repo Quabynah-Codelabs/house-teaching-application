@@ -1,8 +1,11 @@
 package io.codelabs.digitutor.view;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -16,6 +19,8 @@ import io.codelabs.digitutor.data.model.Subject;
 import io.codelabs.digitutor.data.model.Tutor;
 import io.codelabs.digitutor.databinding.ActivityUserBinding;
 import io.codelabs.digitutor.view.adapter.SubjectAdapter;
+import io.codelabs.digitutor.view.fragment.SchedulesActivity;
+import io.codelabs.digitutor.view.kotlin.MakeComplaintActivity;
 import io.codelabs.recyclerview.GridItemDividerDecoration;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
@@ -170,5 +175,39 @@ public class UserActivity extends BaseActivity {
         } else {
             ExtensionUtils.toast(this, "Cannot send request. Please make sure that this request is sent to a tutor instead", true);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (prefs.getType().equals(BaseUser.Type.PARENT) ||
+                prefs.getType().equals(BaseUser.Type.WARD)) {
+            getMenuInflater().inflate(R.menu.user_menu, menu);
+            if (menu instanceof MenuBuilder) ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_make_complaints:
+                Bundle b = new Bundle(0);
+                b.putParcelable(MakeComplaintActivity.EXTRA_TUTOR, getIntent().getParcelableExtra(EXTRA_USER));
+                b.putString(MakeComplaintActivity.EXTRA_TUTOR_ID, getIntent().getStringExtra(EXTRA_USER_UID));
+                intentTo(MakeComplaintActivity.class, b, false);
+
+                return true;
+            case R.id.menu_view_schedule:
+                Bundle bundle = new Bundle(0);
+                bundle.putParcelable(SchedulesActivity.EXTRA_TUTOR, getIntent().getParcelableExtra(EXTRA_USER));
+                bundle.putString(SchedulesActivity.EXTRA_TUTOR_ID, getIntent().getStringExtra(EXTRA_USER_UID));
+                intentTo(SchedulesActivity.class, bundle, false);
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 }
