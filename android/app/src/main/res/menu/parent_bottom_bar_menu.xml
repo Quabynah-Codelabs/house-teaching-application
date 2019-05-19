@@ -11,6 +11,7 @@
     <item
         android:title="Make Complaints"
         app:showAsAction="never"
+        android:visible="false"
         android:id="@+id/menu_make_complaints"
         android:icon="@drawable/twotone_book_24px" />
 

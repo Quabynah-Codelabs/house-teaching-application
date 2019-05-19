@@ -28,6 +28,7 @@ import io.codelabs.digitutor.databinding.ActivityHomeBinding;
 import io.codelabs.digitutor.view.fragment.*;
 import io.codelabs.digitutor.view.kotlin.AddSubjectActivity;
 import io.codelabs.digitutor.view.kotlin.AssignmentActivity;
+import io.codelabs.digitutor.view.kotlin.MakeComplaintActivity;
 import io.codelabs.digitutor.view.kotlin.SearchActivity;
 import io.codelabs.sdk.glide.GlideApp;
 import io.codelabs.sdk.util.ExtensionUtils;
@@ -213,8 +214,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 intentTo(AddSubjectActivity.class);
                 break;
             case R.id.menu_make_complaints:
-                //intentTo(ComplaintActivity.class);
-
+                intentTo(MakeComplaintActivity.class);
                 break;
         }
         return super.onOptionsItemSelected(item);
