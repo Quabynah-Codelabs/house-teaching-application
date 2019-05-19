@@ -64,7 +64,8 @@
 
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
                                                                          android:layout_height="wrap_content"
-                                                                         android:inputType="textCapSentences|textAutoCorrect|textAutoComplete"
+                                                                         android:maxLines="2"
+                                                                         android:inputType="textMultiLine|textCapSentences|textAutoCorrect|textAutoComplete"
                                                                          android:drawablePadding="@dimen/padding_normal"
                                                                          android:id="@+id/comments"/>
 
