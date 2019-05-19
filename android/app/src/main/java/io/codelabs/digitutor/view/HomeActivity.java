@@ -17,11 +17,9 @@ import androidx.databinding.DataBindingUtil;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import io.codelabs.digitutor.R;
 import io.codelabs.digitutor.core.base.BaseActivity;
-import io.codelabs.digitutor.core.datasource.local.UserSharedPreferences;
 import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.core.util.Constants;
@@ -73,8 +71,14 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
             });
         }
 
-        String token = FirebaseInstanceId.getInstance().getToken();
-        sendRegistrationToServer(token);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String token = task.getResult().getToken();
+                sendRegistrationToServer(token);
+            } else {
+                ExtensionUtils.debugLog(getApplicationContext(), "Token could not be retrieved");
+            }
+        });
     }
 
     private void setupHeaderView() {
@@ -84,30 +88,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    @Override
-    public void onEnterAnimationComplete() {
-        /*try {
-            // Now compare the old token with the new one and send information to the database server
-            FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(task -> {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        if (task.getResult() != null) {
-                            String token = task.getResult().getToken();
-                            sendRegistrationToServer(token);
-                        }
-                    });
-        } catch (Exception e) {
-            ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
-
-        }*/
-
-    }
-
-    private void sendRegistrationToServer(String token) {
+    private void sendRegistrationToServer(@Nullable String token) {
         if (prefs.isLoggedIn()) {
             String type = prefs.getType();
             ExtensionUtils.debugLog(this, token);
@@ -122,11 +103,8 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
                 firestore.collection(type.equals(BaseUser.Type.PARENT) ? Constants.PARENTS : Constants.TUTORS)
                         .document(prefs.getKey())
                         .update(hashMap)
-                        .addOnCompleteListener(task -> {
-                            ExtensionUtils.debugLog(getApplicationContext(), "Token updated");
-                        }).addOnFailureListener(e -> {
-                    ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
-                });
+                        .addOnCompleteListener(task -> ExtensionUtils.debugLog(getApplicationContext(), "Token updated : " + token))
+                        .addOnFailureListener(e -> ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage()));
             } catch (Exception e) {
                 ExtensionUtils.debugLog(getApplicationContext(), e.getLocalizedMessage());
             }
