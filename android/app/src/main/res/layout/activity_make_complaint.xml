@@ -63,9 +63,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Button"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/send_complaint"
                 android:onClick="send"

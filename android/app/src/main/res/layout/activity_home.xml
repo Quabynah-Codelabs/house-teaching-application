@@ -34,6 +34,8 @@
                 app:backgroundTint="?colorPrimaryDark"
                 app:fabAlignmentMode="center"
                 app:hideOnScroll="true"
+                android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
                 app:elevation="@dimen/z_app_bar"
                 android:id="@+id/bottom_app_bar" />
 
