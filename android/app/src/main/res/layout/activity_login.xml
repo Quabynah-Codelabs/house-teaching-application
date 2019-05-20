@@ -22,13 +22,13 @@
             android:src="@drawable/shr_logo" />
 
         <io.codelabs.widget.BaselineGridTextView
-            android:layout_width="wrap_content"
-            android:text="@string/home_tutor_name"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingEnd="@dimen/padding_normal"
-            android:layout_marginTop="@dimen/padding_large"
-            android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.LargeTitle"
-            android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:text="@string/home_tutor_name"
+                android:paddingStart="@dimen/padding_normal"
+                android:paddingEnd="@dimen/padding_normal"
+                android:layout_marginTop="@dimen/padding_large"
+                android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.LargeTitle"
+                android:layout_height="wrap_content"/>
 
         <io.codelabs.widget.BaselineGridTextView
             android:layout_width="wrap_content"
