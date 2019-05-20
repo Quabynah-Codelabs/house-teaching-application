@@ -113,7 +113,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_primary_dark"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:id="@+id/create_account"
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:text="@string/create_new_account"

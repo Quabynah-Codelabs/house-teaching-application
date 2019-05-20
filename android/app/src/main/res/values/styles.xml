@@ -17,6 +17,9 @@
         <item name="colorOnError">@color/color_on_error</item>
         <item name="colorOnSurface">@color/color_on_surface</item>
         <item name="scrimBackground" tools:ignore="PrivateResource">@color/mtrl_scrim_color</item>
+        <item name="android:statusBarColor">@color/color_primary</item>
+        <item name="android:navigationBarColor">@color/color_primary</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
 
         <!--SHAPES-->
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.MyApp.LargeComponent</item>
@@ -44,6 +47,14 @@
         <item name="navigationViewStyle">@style/Widget.MyTheme.NavigationView</item>
         <item name="toolbarStyle">@style/Widget.MyTheme.Toolbar</item>
         <item name="appBarLayoutStyle">@style/Widget.MyTheme.AppBar</item>
+
+        <!--INPUT-->
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense</item>
+    </style>
+
+    <style name="HomeTutorAppTheme.Main">
+        <item name="android:statusBarColor">@color/app_scrim</item>
+        <item name="android:navigationBarColor">@color/app_scrim</item>
     </style>
 
     <style name="Base.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">

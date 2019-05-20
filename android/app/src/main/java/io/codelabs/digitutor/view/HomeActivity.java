@@ -130,45 +130,51 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         type.setText(String.format("Logged in as: %s", prefs.getType()));
 
         // Get user information after some delay. this is to help resolve the issue of not finding the user's key in time
-        new Handler().postDelayed(() -> FirebaseDataSource.getCurrentUser(this, firestore, prefs, new AsyncCallback<BaseUser>() {
-            @Override
-            public void onError(@Nullable String error) {
-                ExtensionUtils.toast(HomeActivity.this, error, true);
+        new Handler().postDelayed(() -> {
+            try {
+                FirebaseDataSource.getCurrentUser(this, firestore, prefs, new AsyncCallback<BaseUser>() {
+                    @Override
+                    public void onError(@Nullable String error) {
+                        ExtensionUtils.toast(HomeActivity.this, error, true);
+                    }
+
+                    @Override
+                    public void onSuccess(@Nullable BaseUser response) {
+                        if (response == null) {
+                            ExtensionUtils.toast(HomeActivity.this, "Cannot find this user. PLease re-authenticate this account", true);
+                            return;
+                        }
+
+                        // Load user's profile image with Glide
+                        GlideApp.with(HomeActivity.this)
+                                .load(response.getAvatar() == null || TextUtils.isEmpty(response.getAvatar()) ? Constants.DEFAULT_AVATAR_URL : response.getAvatar())
+                                .circleCrop()
+                                .placeholder(R.drawable.avatar_placeholder)
+                                .error(R.drawable.ic_player)
+                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                .transition(withCrossFade())
+                                .into(avatar);
+
+                        username.setText(response.getName());
+                        type.setText(/*String.format("Logged in as: %s", response.getType().toLowerCase())*/ response.getEmail());
+
+                        ExtensionUtils.debugLog(HomeActivity.this, response);
+                    }
+
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-
-            @Override
-            public void onSuccess(@Nullable BaseUser response) {
-                if (response == null) {
-                    ExtensionUtils.toast(HomeActivity.this, "Cannot find this user. PLease re-authenticate this account", true);
-                    return;
-                }
-
-                // Load user's profile image with Glide
-                GlideApp.with(HomeActivity.this)
-                        .load(response.getAvatar() == null || TextUtils.isEmpty(response.getAvatar()) ? Constants.DEFAULT_AVATAR_URL : response.getAvatar())
-                        .circleCrop()
-                        .placeholder(R.drawable.avatar_placeholder)
-                        .error(R.drawable.ic_player)
-                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                        .transition(withCrossFade())
-                        .into(avatar);
-
-                username.setText(response.getName());
-                type.setText(/*String.format("Logged in as: %s", response.getType().toLowerCase())*/ response.getEmail());
-
-                ExtensionUtils.debugLog(HomeActivity.this, response);
-            }
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        }), 1500);
+        }, 1500);
     }
 
     @Override
