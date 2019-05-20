@@ -21,6 +21,7 @@ import io.codelabs.digitutor.data.model.Parent;
 import io.codelabs.digitutor.data.model.Timetable;
 import io.codelabs.digitutor.data.model.Ward;
 import io.codelabs.digitutor.databinding.FragmentTimetableBinding;
+import io.codelabs.digitutor.view.adapter.TimetableAdapter;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
 
@@ -29,6 +30,8 @@ import java.util.List;
 public class TimeTableFragment extends Fragment {
     private FragmentTimetableBinding binding;
     private String ward = "";
+
+    private TimetableAdapter adapter;
 
     public TimeTableFragment() {
     }
@@ -45,6 +48,8 @@ public class TimeTableFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+        adapter = new TimetableAdapter((BaseActivity) requireActivity());
+        binding.grid.setAdapter(adapter);
         LinearLayoutManager lm = new LinearLayoutManager(requireContext());
         binding.grid.setLayoutManager(lm);
         binding.grid.setItemAnimator(new SlideInItemAnimator());

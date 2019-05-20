@@ -17,6 +17,7 @@ import io.codelabs.digitutor.core.datasource.remote.FirebaseDataSource;
 import io.codelabs.digitutor.core.util.AsyncCallback;
 import io.codelabs.digitutor.data.model.Parent;
 import io.codelabs.digitutor.databinding.FragmentWithListBinding;
+import io.codelabs.digitutor.view.UserActivity;
 import io.codelabs.digitutor.view.adapter.UsersAdapter;
 import io.codelabs.recyclerview.SlideInItemAnimator;
 import io.codelabs.sdk.util.ExtensionUtils;
@@ -43,7 +44,13 @@ public class ClientsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         adapter = new UsersAdapter(requireContext(), (parent, isLongClick) -> {
-            // TODO: 005 05.05.19 perform action when user clicks on each parent in the list
+            if (!isLongClick) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(UserActivity.EXTRA_USER, parent);
+                bundle.putString(UserActivity.EXTRA_USER_UID, parent.getKey());
+                bundle.putString(UserActivity.EXTRA_USER_TYPE, parent.getType());
+                ((BaseActivity) requireActivity()).intentTo(UserActivity.class, bundle, false);
+            }
         });
         binding.grid.setAdapter(adapter);
         LinearLayoutManager lm = new LinearLayoutManager(requireContext());
