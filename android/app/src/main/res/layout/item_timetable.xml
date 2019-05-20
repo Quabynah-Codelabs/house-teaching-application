@@ -18,12 +18,10 @@
 
             <io.codelabs.widget.BaselineGridTextView android:layout_width="wrap_content"
                                                      android:layout_height="wrap_content"
-                                                     android:textColor="@color/text_primary_dark"
-                                                     app:fontFamily="@font/nunito_semibold"
                                                      android:paddingStart="@dimen/padding_normal"
                                                      android:paddingEnd="@dimen/padding_normal"
                                                      android:paddingTop="@dimen/padding_normal"
-                                                     style="@style/TextAppearance.CommentAuthor"
+                                                     android:textAppearance="?textAppearanceBody1"
                                                      android:textSize="18sp"
                                                      android:maxLines="1"
                                                      android:ellipsize="end"

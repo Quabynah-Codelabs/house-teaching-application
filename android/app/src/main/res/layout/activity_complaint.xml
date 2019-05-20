@@ -23,7 +23,7 @@
             <com.google.android.material.appbar.AppBarLayout
                     android:layout_width="match_parent"
                     android:id="@+id/app_bar"
-                    android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
+                    style="?appBarLayoutStyle"
                     android:layout_height="@dimen/shot_collapsed_app_bar_height">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -33,8 +33,6 @@
                         app:title="@string/complaints"
                         app:contentScrim="@color/scrim"
                         android:id="@+id/collapsing_toolbar"
-                        app:expandedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Expanded"
-                        app:collapsedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Collapsed"
                         app:toolbarId="@id/toolbar">
 
                     <androidx.appcompat.widget.Toolbar
@@ -42,7 +40,6 @@
                             android:layout_height="?attr/actionBarSize"
                             app:layout_collapseMode="pin"
                             app:navigationIcon="@drawable/ic_back_light"
-                            app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
                             android:id="@+id/toolbar"/>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -53,7 +50,7 @@
                                                      android:layout_height="wrap_content"
                                                      android:gravity="center"
                                                      android:text="@string/complaint_header"
-                                                     android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
+                                                     android:textAppearance="?textAppearanceBody2"
                                                      android:layout_gravity="center_horizontal"
                                                      android:padding="@dimen/spacing_normal"/>
 

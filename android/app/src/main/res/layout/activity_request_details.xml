@@ -19,7 +19,7 @@
         <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:id="@+id/app_bar"
-                android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
+                style="?appBarLayoutStyle"
                 android:layout_height="@dimen/shot_collapsed_app_bar_height">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -29,8 +29,6 @@
                     app:title="@string/request_details"
                     app:contentScrim="@color/scrim"
                     android:id="@+id/collapsing_toolbar"
-                    app:expandedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Expanded"
-                    app:collapsedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Collapsed"
                     app:toolbarId="@id/toolbar">
 
                 <androidx.appcompat.widget.Toolbar
@@ -38,7 +36,6 @@
                         android:layout_height="?attr/actionBarSize"
                         app:layout_collapseMode="pin"
                         app:navigationIcon="@drawable/ic_back_light"
-                        app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
                         android:id="@+id/toolbar"/>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -64,7 +61,7 @@
                                                      android:paddingEnd="@dimen/padding_normal"
                                                      android:paddingTop="@dimen/padding_normal"
                                                      android:layout_gravity="center_horizontal"
-                                                     android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"/>
+                                                     android:textAppearance="?textAppearanceBody2"/>
 
             <io.codelabs.digitutor.view.widget.PreferenceView
                     android:layout_width="match_parent"
@@ -111,7 +108,7 @@
                                                                    android:layout_marginEnd="@dimen/padding_normal"
                                                                    android:onClick="declineRequest"
                                                                    app:icon="@drawable/twotone_clear_24px"
-                                                                   style="@style/HomeTutorAppTheme.Button.WithText"/>
+                                                                   style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
                 <com.google.android.material.button.MaterialButton android:layout_width="wrap_content"
                                                                    android:layout_height="wrap_content"
@@ -119,7 +116,7 @@
                                                                    android:onClick="acceptRequest"
                                                                    android:layout_marginStart="@dimen/padding_normal"
                                                                    app:icon="@drawable/twotone_done_24px"
-                                                                   style="@style/HomeTutorAppTheme.Button.WithIcon"/>
+                                                                   style="@style/Widget.MaterialComponents.Button"/>
 
             </io.codelabs.widget.ForegroundLinearLayout>
 

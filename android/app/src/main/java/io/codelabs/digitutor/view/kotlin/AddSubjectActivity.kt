@@ -101,7 +101,6 @@ class AddSubjectActivity : BaseActivity(), OnClickListener<Subject> {
             title(literal = getString(R.string.selected_items_hint))
             menu(R.menu.cab_menu)
             titleColor(R.color.text_primary_light)
-            popupTheme(R.style.HomeTutorAppTheme_PopupOverlay)
             slideDown()
 
             onSelection {

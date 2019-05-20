@@ -27,7 +27,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:id="@+id/app_bar"
-            android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
+            style="?appBarLayoutStyle"
             android:layout_height="@dimen/shot_collapsed_app_bar_height">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -37,8 +37,6 @@
                 app:title="@string/user_details"
                 app:contentScrim="@color/scrim"
                 android:id="@+id/collapsing_toolbar"
-                app:expandedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Expanded"
-                app:collapsedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Collapsed"
                 app:toolbarId="@id/toolbar">
 
                 <androidx.appcompat.widget.Toolbar
@@ -46,7 +44,6 @@
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_back_light"
-                    app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
                     android:id="@+id/toolbar" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -135,7 +132,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/HomeTutorAppTheme.Button"
+                        style="@style/Widget.MaterialComponents.Button"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/spacing_large"
                         android:onClick="requestService"

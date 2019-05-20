@@ -19,9 +19,9 @@
                 android:orientation="vertical">
 
             <com.google.android.material.appbar.AppBarLayout
+                    style="?appBarLayoutStyle"
                     android:layout_width="match_parent"
                     android:id="@+id/app_bar"
-                    android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
                     android:layout_height="@dimen/shot_collapsed_app_bar_height">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -31,8 +31,6 @@
                         app:title="@string/add_assignment"
                         app:contentScrim="@color/scrim"
                         android:id="@+id/collapsing_toolbar"
-                        app:expandedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Expanded"
-                        app:collapsedTitleTextAppearance="@style/TextAppearance.HomeTutorAppTheme.Collapsed"
                         app:toolbarId="@id/toolbar">
 
                     <androidx.appcompat.widget.Toolbar
@@ -40,7 +38,6 @@
                             android:layout_height="?attr/actionBarSize"
                             app:layout_collapseMode="pin"
                             app:navigationIcon="@drawable/ic_back_light"
-                            app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
                             android:id="@+id/toolbar"/>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -51,7 +48,7 @@
                                                      android:layout_height="wrap_content"
                                                      android:gravity="center"
                                                      android:text="@string/file_format_assignment"
-                                                     android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
+                                                     android:textAppearance="?textAppearanceBody1"
                                                      android:layout_gravity="center_horizontal"
                                                      android:padding="@dimen/spacing_normal"/>
 
@@ -59,7 +56,6 @@
                                                                    android:layout_height="wrap_content"
                                                                    android:layout_marginStart="@dimen/padding_large"
                                                                    android:layout_marginEnd="@dimen/padding_large"
-                                                                   style="@style/HomeTutorAppTheme.TextInputTheme"
                                                                    android:hint="@string/comments">
 
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
@@ -76,14 +72,13 @@
                                                      android:text="@{fileUrl}"
                                                      android:visibility="@{fileUrl != null &amp;&amp; !TextUtils.isEmpty(fileUrl) ? View.VISIBLE : View.GONE, default=gone}"
                                                      android:textColor="?attr/colorSecondary"
-                                                     android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
                                                      android:layout_gravity="center_horizontal"
                                                      android:padding="@dimen/spacing_normal"/>
 
             <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/HomeTutorAppTheme.Button.WithText"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/pick_file"
                     android:onClick="pickAssignment"
@@ -101,7 +96,7 @@
                                                      android:text="@string/select_ward"
                                                      android:visibility="@{showList ? View.VISIBLE : View.GONE}"
                                                      android:layout_marginTop="@dimen/spacing_large"
-                                                     android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
+                                                     android:textAppearance="?textAppearanceBody2"
                                                      android:layout_gravity="center_horizontal"
                                                      android:padding="@dimen/spacing_normal"/>
 
@@ -120,7 +115,7 @@
         <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/HomeTutorAppTheme.Button.WithIcon"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="@dimen/fab_margin"
                 android:text="@string/post_assignment"

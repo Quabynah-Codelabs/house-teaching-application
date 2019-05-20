@@ -31,23 +31,20 @@
                 android:id="@+id/titleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fontFamily="@font/nunito_extrabold"
+                android:textAppearance="?textAppearanceBody1"
                 android:ellipsize="end"
-                android:textColor="@color/text_primary_dark"
                 android:maxLines="1"
                 tools:text="Default SMS App"/>
 
         <io.codelabs.widget.BaselineGridTextView
                 android:id="@+id/summaryView"
-                style="@style/TextAppearance.CommentTimestamp"
+                android:textAppearance="?textAppearanceSubtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:fontFeatureSettings="onum"
-                android:textColor="@color/text_secondary_dark"
-                app:fontFamily="@font/nunito_semibold"
                 tools:text="Some text goes here"/>
 
     </LinearLayout>

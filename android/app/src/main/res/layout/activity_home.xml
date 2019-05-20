@@ -34,10 +34,7 @@
                 app:backgroundTint="?colorPrimaryDark"
                 app:fabAlignmentMode="center"
                 app:hideOnScroll="true"
-                style="@style/Widget.MaterialComponents.BottomAppBar"
-                android:theme="@style/HomeTutorAppTheme.AppBarOverlay"
-                app:popupTheme="@style/HomeTutorAppTheme.PopupOverlay"
-                app:layout_scrollFlags="scroll|enterAlways"
+                app:elevation="@dimen/z_app_bar"
                 android:id="@+id/bottom_app_bar" />
 
             <!-- FAB-->
@@ -46,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add_light"
                 android:id="@+id/fab"
-                style="@style/HomeTutorAppTheme.FAB"
                 app:layout_anchor="@id/bottom_app_bar" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

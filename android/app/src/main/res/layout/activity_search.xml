@@ -57,7 +57,7 @@
                     android:id="@+id/searchback"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:tint="@color/colorAccent"
+                    android:tint="?colorPrimary"
                     android:onClick="dismiss"
                     android:background="?android:selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_arrow_back_padded" />

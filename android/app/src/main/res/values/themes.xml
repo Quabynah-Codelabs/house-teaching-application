@@ -21,5 +21,16 @@
     </style>
 
     <!--Toolbar-->
-    <style name="Widget.MyTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary"/>
+    <style name="Widget.MyTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Light</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!--BottomAppBar-->
+    <style name="Widget.MyTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+        <item name="android:popupTheme">@style/ThemeOverlay.MaterialComponents.Light</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+        <item name="android:elevation">@dimen/z_app_bar</item>
+    </style>
 </resources>

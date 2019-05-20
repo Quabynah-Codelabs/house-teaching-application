@@ -22,7 +22,7 @@
                                                      android:paddingStart="@dimen/padding_normal"
                                                      android:paddingEnd="@dimen/padding_normal"
                                                      android:paddingTop="@dimen/padding_normal"
-                                                     style="@style/TextAppearance.CommentAuthor"
+                                                     android:textAppearance="?textAppearanceBody2"
                                                      android:textSize="18sp"
                                                      android:maxLines="1"
                                                      android:ellipsize="end"

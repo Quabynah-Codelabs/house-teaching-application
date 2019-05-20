@@ -42,7 +42,7 @@
             android:paddingStart="@dimen/padding_normal"
             android:paddingEnd="@dimen/padding_normal"
             android:layout_marginTop="@dimen/padding_large"
-            android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.LargeTitle"
+            android:textAppearance="?textAppearanceHeadline5"
             android:text="@string/oops"/>
 
     <io.codelabs.widget.BaselineGridTextView
@@ -51,7 +51,7 @@
             android:gravity="center"
             android:paddingStart="@dimen/padding_normal"
             android:paddingEnd="@dimen/padding_normal"
-            android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
+            android:textAppearance="?textAppearanceBody2"
             android:text="@string/not_found_text"/>
 
 </io.codelabs.widget.ForegroundLinearLayout>

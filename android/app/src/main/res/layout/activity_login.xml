@@ -27,13 +27,13 @@
                 android:paddingStart="@dimen/padding_normal"
                 android:paddingEnd="@dimen/padding_normal"
                 android:layout_marginTop="@dimen/padding_large"
-                android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.LargeTitle"
+                android:textAppearance="?textAppearanceHeadline6"
                 android:layout_height="wrap_content"/>
 
         <io.codelabs.widget.BaselineGridTextView
             android:layout_width="wrap_content"
             android:text="@string/home_tutor_desc"
-            android:textAppearance="@style/TextAppearance.HomeTutorAppTheme.SmallTitle"
+            android:textAppearance="?textAppearanceBody2"
             android:layout_height="wrap_content" />
 
         <include
@@ -54,7 +54,6 @@
                 android:layout_marginStart="@dimen/padding_large"
                 android:layout_marginEnd="@dimen/padding_large"
                 android:hint="@string/email_address"
-                style="@style/HomeTutorAppTheme.TextInputTheme"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -75,7 +74,6 @@
                 app:passwordToggleDrawable="@drawable/asl_password_visibility"
                 app:passwordToggleEnabled="true"
                 android:layout_marginTop="@dimen/spacing_normal"
-                style="@style/HomeTutorAppTheme.TextInputTheme"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -91,7 +89,6 @@
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/HomeTutorAppTheme.Button"
                 android:id="@+id/login_button"
                 android:onClick="loginUser"
                 android:layout_marginTop="@dimen/padding_normal"
@@ -107,7 +104,6 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/HomeTutorAppTheme.Button.WithText"
                     android:id="@+id/forgot_password"
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:text="@string/forgot_password"
@@ -117,7 +113,6 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/HomeTutorAppTheme.Button.WithText"
                     android:textColor="@color/text_primary_dark"
                     android:id="@+id/create_account"
                     android:layout_marginStart="@dimen/spacing_normal"
